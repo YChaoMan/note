@@ -42,12 +42,17 @@
             #main-item, #main-item > div {
                 display: none;
             }
-            #main-container > ul li {
+            #main-container > ul li,
+            #main-item > ul li {
                 cursor: pointer;                
             }
-            .main-show > div {
+            #main-container .main-show > div,
+            #main-item .main-show > div {
                 display: none;
             }
+			.default-value {
+				color: #CCC;
+			}
             /* Flex容器样式 end */
         </style>
     </head>
@@ -84,9 +89,9 @@
                         <li>flex-direction(主轴的方向（即项目的排列方向）)</li>
                         <li>flex-wrap(主轴的换行方式（即主轴线排不下时如何换行）)</li>
                         <li>flex-flow(是flex-direction属性和flex-wrap属性的简写形式)</li>
-                        <li>justify-content(justify-content属性定义了项目在主轴上的对齐方式。)</li>
-                        <li>align-items(align-items属性定义项目在交叉轴(垂直方向)上如何对齐。)</li>
-                        <li>align-content(align-content属性定义了<span style="color: #3e3e3e; font-weight: bold;">多根轴线</span>的对齐方式。如果项目只有一根轴线，该属性不起作用。)</li>
+                        <li>justify-content(定义了项目在主轴上的对齐方式。)</li>
+                        <li>align-items(定义项目在交叉轴(垂直方向)上如何对齐。)</li>
+                        <li>align-content(定义了<span style="color: #3e3e3e; font-weight: bold;">多根轴线</span>的对齐方式。如果项目只有一根轴线，该属性不起作用。)</li>
                     </ul>
                     <div class="main-show">
                         <div class="flex-direction">
@@ -171,42 +176,128 @@
                         </div>
                     </div>
                 </div>
-                <div id="main-item"></div>
+                <div id="main-item">
+					<p>项目的属性有六个</p>
+                    <ul style="letter-spacing: 1.3px;">
+                        <li>order(定义项目的排列顺序。数值越小，排列越靠前。)</li>
+                        <li>flex-grow(定义项目的放大比例，即如果存在剩余空间，也不放大。)</li>
+                        <li>flex-shrink(定义了项目的缩小比例，默认为1，即如果空间不足，该项目将缩小。)</li>
+                        <li>flex-basis(定义了在分配多余空间之前，项目占据的主轴空间（main size）。浏览器根据这个属性，计算主轴是否有多余空间。它的默认值为auto，即项目的本来大小。)</li>
+                        <li>flex(是flex-grow, flex-shrink 和 flex-basis的简写，默认值为0 1 auto。后两个属性可选。)</li>
+                        <li>align-self(允许单个项目有与其他项目不一样的对齐方式，可覆盖align-items属性。默认值为auto，表示继承父元素的align-items属性，如果没有父元素，则等同于stretch。)</li>
+                    </ul>
+					<div class="main-show">
+                        <div class="order">
+                            <p>order属性定义项目的排列顺序。数值越小，排列越靠前，默认为0。</p>
+                            <div class="show-border">
+                                <p>order: &lt;number&gt;;&nbsp;&nbsp;&nbsp;<span class="default-value">/* default 0 */</span></p>
+								<pre>
+	.item  {
+		order: &lt;number&gt;;	/* default 0 */
+	}
+								</pre>
+                            </div>
+                            <img src="images/bg2015071013.png" />
+                        </div>
+						<div class="flex-grow">
+                            <p>flex-grow属性定义项目的放大比例，默认为0，即如果存在剩余空间，也不放大。如果所有项目的flex-grow属性都为1，则它们将等分剩余空间（如果有的话）。如果一个项目的flex-grow属性为2，其他项目都为1，则前者占据的剩余空间将比其他项多一倍。</p>
+                            <div class="show-border">
+                                <p>flex-grow: &lt;number&gt;;&nbsp;&nbsp;&nbsp;<span class="default-value">/* default 0 */</span></p>
+								<pre>
+	.item  {
+		flex-grow: &lt;number&gt;;	/* default 0 */
+	}
+								</pre>
+                            </div>
+                            <img src="images/bg2015071014.png" />
+                        </div>
+						<div class="flex-shrink">
+                            <p>flex-shrink属性定义了项目的缩小比例，默认为1，即如果空间不足，该项目将缩小。如果所有项目的flex-shrink属性都为1，当空间不足时，都将等比例缩小。如果一个项目的flex-shrink属性为0，其他项目都为1，则空间不足时，前者不缩小。
+
+负值对该属性无效。</p>
+                            <div class="show-border">
+                                <p>flex-shrink: &lt;number&gt;;&nbsp;&nbsp;&nbsp;<span class="default-value">/* default 1 */</span></p>
+								<pre>
+	.item  {
+		flex-shrink: &lt;number&gt;;	/* default 1 */
+	}
+								</pre>
+                            </div>
+                            <img src="images/bg2015071015.jpg" />
+                        </div>
+						<div class="flex-basis">
+                            <p>flex-basis属性定义了在分配多余空间之前，项目占据的主轴空间（main size）。浏览器根据这个属性，计算主轴是否有多余空间。它的默认值为auto，即项目的本来大小。它可以设为跟width或height属性一样的值（比如350px），则项目将占据固定空间。</p>
+                            <div class="show-border">
+                                <p>flex-basis: &lt;length&gt; | auto;&nbsp;&nbsp;&nbsp;<span class="default-value">/* default auto */</span></p>
+								<pre>
+	.item  {
+		flex-basis: &lt;length&gt; | auto;	/* default auto */
+	}
+								</pre>
+                            </div>
+                        </div>
+						<div class="flex">
+                            <p>flex属性是flex-grow, flex-shrink 和 flex-basis的简写，默认值为0 1 auto。后两个属性可选。<span style="font-weight: bold;">该属性有两个快捷值：auto (1 1 auto) 和 none (0 0 auto)。建议优先使用这个属性，而不是单独写三个分离的属性，因为浏览器会推算相关值。</span></p>
+                            <div class="show-border">
+                                <p>flex: none | [&lt;'flex-grow'&gt;&lt;'flex-shrink'&gt; || &lt;'flex-basis'&gt];
+								<pre>
+	.item  {
+		flex: none | [&lt;'flex-grow'&gt;&lt;'flex-shrink'&gt; || &lt;'flex-basis'&gt];
+	}
+								</pre>
+                            </div>
+                        </div>
+						<div class="align-self">
+                            <p>align-self属性允许单个项目有与其他项目不一样的对齐方式，可覆盖align-items属性。默认值为auto，表示继承父元素的align-items属性，如果没有父元素，则等同于stretch。</p>
+                            <div class="show-border">
+                                <p>align-self: auto | flex-start | flex-end | center | baseline | stretch;&nbsp;&nbsp;<span class="default-value">/* default auto */</span></p>
+								<pre>
+	.item  {
+		align-self: auto | flex-start | flex-end | center | baseline | stretch;&nbsp;&nbsp;/* default auto */
+	}
+								</pre>
+                            </div>
+                            <img src="images/bg2015071016.png" />
+                        </div>
+					</div>
+				</div>
             </div>
         </div>
         <script>
-            (() => {
-                let container = document.getElementById("container");
-                let item = document.getElementById("item");
-                let mainContainer = document.getElementById("main-container");
-                let mainItem = document.getElementById("main-item");
+			const container = document.getElementById("container");
+			const item = document.getElementById("item");
+			const mainContainer = document.getElementById("main-container");
+			const mainItem = document.getElementById("main-item");
+			
+			// 样式初始化操作
+			(() => {
                 mainContainer.style.display = "block";
                 container.className = "active-span";
-
+			})();
+			
+			// 容器
+            (() => {
                 container.onclick = () => {
                     item.classList.remove("active-span");
                     container.classList.add("active-span");
                     mainContainer.style.display = "block";
                     mainItem.style.display = "none";
                 };
-                item.onclick = () => {
-                    container.classList.remove("active-span");
-                    item.classList.add("active-span");
-                    mainContainer.style.display = "none";
-                    mainItem.style.display = "block";
-                }
 
-                let liElements = mainContainer.getElementsByTagName("ul")[0].getElementsByTagName("li");
-                for (let index in liElements) {
-                    let liElement = liElements[index];
+				// 容器的属性绑定点击事件
+                let containerLiElements = mainContainer.getElementsByTagName("ul")[0].getElementsByTagName("li");
+                for (let index in containerLiElements) {
+                    let liElement = containerLiElements[index];
                     // 容器属性项点击
                     liElement.onclick = () => {
-                        for (let index in liElements) {
-                            let liElement = liElements[index];
+						// 容器标题样式变化
+                        for (let index in containerLiElements) {
+                            let liElement = containerLiElements[index];
                             liElement.classList && (liElement.classList.remove("active-span"));
                         }
                         liElement.classList.add("active-span");
                         
+						// 容器对应的内容div显示
                         let mainContainerDivElements = mainContainer.getElementsByClassName("main-show")[0].children;
                         for (let item of mainContainerDivElements) {
                              item.style.display = "none";
@@ -216,6 +307,38 @@
                     }
                 }
             })();
+			
+			// 项目
+			(() => {
+                item.onclick = () => {
+                    container.classList.remove("active-span");
+                    item.classList.add("active-span");
+                    mainContainer.style.display = "none";
+                    mainItem.style.display = "block";
+                }
+				// 项目的属性绑定点击事件
+				let itemLiElements = mainItem.getElementsByTagName("ul")[0].getElementsByTagName("li");
+                for (let index in itemLiElements) {
+                    let liElement = itemLiElements[index];
+                    // 项目属性项点击
+                    liElement.onclick = () => {
+						// 项目标题样式变化
+                        for (let index in itemLiElements) {
+                            let liElement = itemLiElements[index];
+                            liElement.classList && (liElement.classList.remove("active-span"));
+                        }
+                        liElement.classList.add("active-span");
+                        
+						// 项目对应的内容div显示
+                        let mainItemDivElements = mainItem.getElementsByClassName("main-show")[0].children;
+                        for (let item of mainItemDivElements) {
+                             item.style.display = "none";
+                        }
+                        mainItem.getElementsByClassName("main-show")[0].style.display = "block";
+                        mainItemDivElements[index].style.display="block";
+                    }
+                }
+			})();
         </script>
     </body>
 </html>
