@@ -1,0 +1,221 @@
+<! DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Flex布局回顾</title>
+        <style>
+            body {
+                background-color: #FFF8DC;
+            }
+            p {
+                text-indent: 2rem;
+            }
+            .link {
+                text-align: center;
+
+            }
+            .link span {
+                cursor: pointer;
+            }
+            .active-span {
+                text-decoration: underline;
+                color: #00F;
+            }
+            .active {
+                display: block;
+            }
+            .main {
+                min-height: 500px;
+            }
+            img {
+                width: 45rem;
+            }
+            .show-border {
+                border: 1px dashed #333;
+                padding-bottom: 16px;
+            }
+            hr {
+                border: .2px dashed #ccc;
+            }
+            /* Flex容器样式 start */
+            #main-container, #main-container > div, 
+            #main-item, #main-item > div {
+                display: none;
+            }
+            #main-container > ul li {
+                cursor: pointer;                
+            }
+            .main-show > div {
+                display: none;
+            }
+            /* Flex容器样式 end */
+        </style>
+    </head>
+    <body>
+        <div style="width: 1006px; overflow: auto; margin: 0 auto;">
+            <div class="show-border">
+                <p>Flex 是 Flexible Box 的缩写，意为"弹性布局"，用来为盒状模型提供最大的灵活性。
+    任何一个容器都可以指定为 Flex 布局。</p>
+                <p>采用 Flex 布局的元素，称为 Flex 容器（flex container），简称"容器"。它的所有子元素自动成为容器成员，称为 Flex 项目（flex item），简称"项目"。</p>
+                <p>
+                    <img src="images/bg2015071004.png" />
+                    <p style="font-weight: bold; color: #3e3e3e;">容器默认存在两根轴：水平的主轴（main axis）和垂直的交叉轴（cross axis）。主轴的开始位置（与边框的交叉点）叫做main start，结束位置叫做main end；交叉轴的开始位置叫做cross start，结束位置叫做cross end。
+    项目默认沿主轴排列。单个项目占据的主轴空间叫做main size，占据的交叉轴空间叫做cross size。
+                    </p>
+                </p>
+                <p style="color: red;">注意，设为 Flex 布局以后，子元素的float、clear和vertical-align属性将失效。</p>
+                <p>
+                    <label>Webkit 内核的浏览器，必须加上-webkit前缀。</label><br>
+                    <pre>
+        .box{
+            display: -webkit-flex; /* Safari */
+            display: flex;
+        }
+                    </pre>
+                </p>
+            </div>
+            <div class="link">
+                <span id="container">Flex 容器</span>&nbsp;&nbsp;|&nbsp;&nbsp;<span id="item">Flex 项目</span>
+            </div>
+            <div class="main">
+                <div id="main-container">
+                    <p>容器的属性有六个</p>
+                    <ul style="letter-spacing: 1.3px;">
+                        <li>flex-direction(主轴的方向（即项目的排列方向）)</li>
+                        <li>flex-wrap(主轴的换行方式（即主轴线排不下时如何换行）)</li>
+                        <li>flex-flow(是flex-direction属性和flex-wrap属性的简写形式)</li>
+                        <li>justify-content(justify-content属性定义了项目在主轴上的对齐方式。)</li>
+                        <li>align-items(align-items属性定义项目在交叉轴(垂直方向)上如何对齐。)</li>
+                        <li>align-content(align-content属性定义了<span style="color: #3e3e3e; font-weight: bold;">多根轴线</span>的对齐方式。如果项目只有一根轴线，该属性不起作用。)</li>
+                    </ul>
+                    <div class="main-show">
+                        <div class="flex-direction">
+                            <p>flex-direction属性决定主轴的方向（即项目的排列方向）。</p>
+                            <div class="show-border">
+                                <p>flex-direction: row | row-reverse | column | column-reverse;</p>
+                                <ul>
+                                    <li>row（默认值）：主轴为水平方向，起点在左端。</li>
+                                    <li>row-reverse：主轴为水平方向，起点在右端。</li>
+                                    <li>column：主轴为垂直方向，起点在上沿。</li>
+                                    <li>column-reverse：主轴为垂直方向，起点在下沿。</li>
+                                </ul>
+                            </div>
+                            <img src="images/bg2015071005.png" />
+                        </div>
+                        <div class="flex-wrap">
+                            <p><span style="text-decoration: underline;">flex-wrap属性定义，如果一条轴线排不下，如何换行。</span>默认情况下，项目都排在一条线（又称"轴线"）上。</p>
+                            <img src="images/bg2015071006.png" />
+                            <div class="show-border">
+                                <p>flex-wrap: nowrap | wrap | wrap-reverse;</p>
+                                <ul>
+                                    <li>nowrap（默认）：不换行。</li>
+                                    <li>wrap：换行，第一行在上方。</li>
+                                    <li>wrap-reverse：换行，第一行在下方。</li>
+                                </ul>
+                            </div>
+                            <img src="images/bg2015071007.png" /><hr>
+                            <img src="images/bg2015071008.jpg" /><hr>
+                            <img src="images/bg2015071009.jpg" />
+                        </div>
+                         <div class="flex-flow">
+                            <p>flex-flow属性是flex-direction属性和flex-wrap属性的简写形式，默认值为row nowrap。</p>
+                            <pre>
+            .box {
+                flex-flow: flex-direction || flex-wrap;
+            }
+                            </pre>
+                        </div>
+                        <div class="justify-content">
+                            <p>justify-content属性定义了项目在主轴上的对齐方式。</p>
+                            <div class="show-border">
+                                <p>justify-content: flex-start | flex-end | center | space-between | space-around;</p>
+                                <ul>
+                                    <li>flex-start（默认值）：左对齐</li>
+                                    <li>flex-end：右对齐</li>
+                                    <li>center： 居中</li>
+                                    <li>space-between：两端对齐，项目之间的间隔都相等。</li>
+                                    <li>space-around：每个项目两侧的间隔相等。所以，项目之间的间隔比项目与边框的间隔大一倍。</li>
+                                </ul>
+                            </div>
+                            <img src="images/bg2015071010.png" />
+                        </div>
+                        <div class="align-items">
+                            <p>align-items属性定义项目在交叉轴上如何对齐。</p>
+                            <div class="show-border">
+                                <p>align-items: flex-start | flex-end | center | baseline | stretch;</p>
+                                <ul>
+                                    <li>stretch（默认值）：如果项目未设置高度或设为auto，将占满整个容器的高度。</li>
+                                    <li>flex-start：交叉轴的起点对齐。</li>
+                                    <li>flex-end：交叉轴的终点对齐。</li>
+                                    <li>center：交叉轴的中点对齐。</li>
+                                    <li>baseline: 项目的第一行文字的基线对齐。</li>
+                                </ul>
+                            </div>
+                            <img src="images/bg2015071011.png" />
+                        </div>
+                        <div class="align-content">
+                            <p>align-content属性定义了多根轴线的对齐方式。如果项目只有一根轴线，该属性不起作用。</p>
+                            <div class="show-border">
+                                <p>align-content: flex-start | flex-end | center | space-between | space-around | stretch;
+}</p>
+                                <ul>
+                                    <li>stretch（默认值）：轴线占满整个交叉轴。</li>
+                                    <li>flex-start：与交叉轴的起点对齐。</li>
+                                    <li>flex-end：与交叉轴的终点对齐。</li>
+                                    <li>center：与交叉轴的中点对齐。</li>
+                                    <li>space-between：与交叉轴两端对齐，轴线之间的间隔平均分布。</li>
+                                    <li>space-around：每根轴线两侧的间隔都相等。所以，轴线之间的间隔比轴线与边框的间隔大一倍。</li>
+                                </ul>
+                            </div>
+                            <img src="images/bg2015071012.png" />
+                        </div>
+                    </div>
+                </div>
+                <div id="main-item"></div>
+            </div>
+        </div>
+        <script>
+            (() => {
+                let container = document.getElementById("container");
+                let item = document.getElementById("item");
+                let mainContainer = document.getElementById("main-container");
+                let mainItem = document.getElementById("main-item");
+                mainContainer.style.display = "block";
+                container.className = "active-span";
+
+                container.onclick = () => {
+                    item.classList.remove("active-span");
+                    container.classList.add("active-span");
+                    mainContainer.style.display = "block";
+                    mainItem.style.display = "none";
+                };
+                item.onclick = () => {
+                    container.classList.remove("active-span");
+                    item.classList.add("active-span");
+                    mainContainer.style.display = "none";
+                    mainItem.style.display = "block";
+                }
+
+                let liElements = mainContainer.getElementsByTagName("ul")[0].getElementsByTagName("li");
+                for (let index in liElements) {
+                    let liElement = liElements[index];
+                    // 容器属性项点击
+                    liElement.onclick = () => {
+                        for (let index in liElements) {
+                            let liElement = liElements[index];
+                            liElement.classList && (liElement.classList.remove("active-span"));
+                        }
+                        liElement.classList.add("active-span");
+                        
+                        let mainContainerDivElements = mainContainer.getElementsByClassName("main-show")[0].children;
+                        for (let item of mainContainerDivElements) {
+                             item.style.display = "none";
+                        }
+                        mainContainer.getElementsByClassName("main-show")[0].style.display = "block";
+                        mainContainerDivElements[index].style.display="block";
+                    }
+                }
+            })();
+        </script>
+    </body>
+</html>
