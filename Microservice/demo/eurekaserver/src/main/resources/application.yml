@@ -1,0 +1,13 @@
+# 项目端口配置
+server:
+    port: 8080
+
+# eureka配置
+eureka:
+    instance:
+        hostname: localhost
+    client:
+        registerWithEureka: false
+        fetchRegistry: false
+        serviceUrl: 
+            defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
