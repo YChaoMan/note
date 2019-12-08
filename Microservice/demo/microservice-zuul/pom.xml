@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ycm</groupId>
-	<artifactId>microservice-serviceribbon</artifactId>
+	<artifactId>microservice-zuul</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>microservice-serviceribbon</name>
-	<description>服务消费者 - 负载均衡</description>
+	<name>microservice-zuul</name>
+	<description>路由网关</description>
 
 	<properties>
 		<java.version>1.8</java.version>
@@ -26,16 +26,15 @@
 		</dependency>
 		
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		
-		<!-- 断路器依赖 -->
-		<dependency>
-		    <groupId>org.springframework.cloud</groupId>
-	        <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
-		</dependency>
-		
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-zuul</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
