@@ -751,20 +751,20 @@
                         */
                     }
                 };
-				let child3 = {
-					template: '<button v-on:click="incrementHandler">{{counter}} </button>',
-					data: function() {
-						return {
-							counter: 0
-						};
-					},
-					methods: {
-						incrementHandler: function() {
-							++this.counter;
-							this.$emit('increment');
-						}
-					}
+		let child3 = {
+			template: '<button v-on:click="incrementHandler">{{counter}} </button>',
+			data: function() {
+				return {
+					counter: 0
 				};
+			},
+			methods: {
+				incrementHandler: function() {
+					++this.counter;
+					this.$emit('increment');
+				}
+			}
+		};
                 let vm = new Vue({
                     el: '#classes9',
                     data: {
