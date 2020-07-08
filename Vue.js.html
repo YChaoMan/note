@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>组件-自定义事件</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style type="text/css">
+        body {
+            display: flex;
+            margin: 0;
+        }
+
+        body nav {
+            border-right: 2px dashed #3e3e3e;
+            margin-right: .5vw;
+            overflow-y: auto;
+            height: 100vh;
+        }
+
+        body nav div {
+            height: 8vh;
+            line-height: 8vh;
+            padding: 0 .5vw;
+            text-align: center;
+            color: #3e3e3e;
+            width: auto;
+        }
+
+        body nav div:nth-of-type(odd) {
+            background-color: #87cde299;
+        }
+        
+        body content {
+            height: 100vh;
+            overflow: auto;
+            width: 86.5vw;
+        }
+
+        body content>div {
+            margin-bottom: 10vh;
+            display: none;
+        }
+
+        #list-1, .class1 {
+            color: #00F;
+        }
+
+        .active {
+            color: #00F;
+        }
+
+        .font-style {
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div id="nav-classes1">模板语法</div>
+        <div id="nav-classes2">条件语句</div>
+        <div id="nav-classes3">循环语句</div>
+        <div id="nav-classes4">计算属性</div>
+        <div id="nav-classes5">监听属性</div>
+        <div id="nav-classes6">样式绑定</div>
+        <div id="nav-classes7">事件处理器</div>
+        <div id="nav-classes8">表单</div>
+        <div id="nav-classes9">组件</div>
+        <div id="nav-classes10">自定义指令</div>
+        <div id="nav-classes11">路由</div>
+        <div id="nav-classes12">过渡&动画</div>
+        <div id="nav-classes13">混入</div>
+        <div id="nav-classes14">Ajax(axios)</div>
+        <div id="nav-classes15">Ajax(vue-resource)</div>
+        <div id="nav-classes16">响应接口</div>
+        <div id="nav-classes17">实例</div>
+    </nav>
+    <content>
+    	<div id="classes1">
+            <h2>#插值</h2>
+            <hr>
+            1.文本
+            <p>site:{{site}}</p>
+            <p>url: {{url}}</p>
+            <p>{{details()}} </p>
+            2.html
+            <div v-html="message"></div>
+            3.属性
+            <label for="r1">修改颜色</label>
+            <input type="checkbox" v-model="use" id="r1">
+            <div v-bind:class="{'class1': use}">v-bind:class指令</div>
+            4.表达式
+            <div>
+                算术运算：{{512+1024}}<br>
+                布尔判断：{{ok? 'YES' : 'NO'}}<br>
+                字符操作：{{message.split('').reverse().join('')}}
+                <div v-bind:id="'list-' + id">div id属性绑定</div>
+            </div>
+            5.指令(点击上面的 属性 查看效果)
+            <p v-if="!use">指令是带有v-前缀的特殊属性，指令用于在表达式的值改变时，将某些行为应用到 DOM 上。</p>
+            6.参数。比如这里给&lt;a&gt;绑定了href参数
+            <pre><a v-bind:href="url">参数在指令后以冒号指明。</a></pre>
+            7.事件
+            <div>
+                <a v-on:click="eventClick"> v-on 指令，它用于监听 DOM 事件</a>
+            </div>
+            8.修饰符
+            <form v-on:submit.prevent="onSubmit">
+                <div>修饰符以半角句号 . 指明的特殊后缀，用于指出一个指令应该以特殊方式绑定.prevent 修饰符告诉 v-on 指令对于触发的事件调用 event.preventDefault() 禁止默认行为</div>
+                <button type="submit">提交</button>
+            </form>
+            <h2>用户输入</h2>
+            <hr>
+            <div>{{userInput}} </div>
+            <input v-model="userInput">
+            <h2>过滤器</h2>
+            <hr>
+            在两个大括号中或在v-bind指令中。被用作一些常见的文本格式化。由"管道符 | "指示。
+            <div v-bind:alexa="alexa">{{site | capitalize('aa')}}</div>
+            <h2>缩写</h2>
+            <hr>
+            <p>v-bind:href 缩写 :href<br>v-on:click 缩写 @click</p>
+        </div>
+        <div id="classes2">
+            <h2>条件语句</h2>
+            <hr>
+            <div v-if="seen">if条件为true，显示</div>
+            <div v-else>if条件为false，不显示</div>
+            <template v-show="ok">template 显示</template>
+        </div>
+        <div id="classes3">
+            <h2>循环语句</h2>
+            <br>
+            迭代数组
+            <ol>
+                <li v-for="array in arrays">
+                    {{array}}
+                </li>
+            </ol>
+            迭代对象
+            <ol>
+                # obj in objects
+                <li v-for="obj in objects">
+                    {{obj}}
+                </li>
+                # (value, key) in objects
+                <li v-for="(value, key) in objects">
+                    {{key}}, {{value}}
+                </li>
+
+                # (value, key, index) in objects
+                <li v-for="(value, key, index) in objects">
+                    {{key}}, {{value}}, {{index}}
+                </li>
+            </ol>
+            迭代整数
+            <ol>
+                # n in 10
+                <li v-for="n in 10">
+                    {{n}}
+                </li>
+            </ol>
+        </div>
+        <div id="classes4">
+            <h2>计算属性</h2>
+            <hr>
+            属性关键字：computed
+            <div>原始字符串message：{{message}} </div>
+            <div>反转字符串reverseMessage：{{reverseMessage}} </div>
+            <p>
+                这里声明了一个计算属性 reversedMessage，提供的函数将用作属性 vm.reversedMessage 的 getter，
+                vm.reversedMessage 依赖于 vm.message，在 vm.message 发生改变时，vm.reversedMessage 也会更新
+            </p>
+            <h2>computed vs methods</h2>
+            <hr>
+            <div>computed与methods效果是一样的，但是 computed 是基于依赖缓存，只有相应依赖关系发生改变时才会重新获取值，
+                而使用 methods 在重新渲染时，函数总会重新调用执行。因此 computed 性能会更好些，因为它依赖缓存。</div>
+            <div>当computed使用一个独立于vue实例的变量时，“依赖缓存”的概念与method更加明显
+                <p>computed； 第一次outVar:{{callOutVar}}， 第二次outVar: {{callOutVar}} </p>
+                <p>method； 第一次outVar:{{callVar()}}, 第二次outVar:{{callVar()}}</p>
+            </div>
+            <h2>computed setter</h2>
+            <hr>
+            <div>computed 属性只有getter，但你可以自定义一个setter</div>
+            <div>{{name}} </div>
+        </div>
+        <div id="classes5">
+            <h2>监听属性</h2>
+            <hr>
+            通过 watch 属性或者调用实例方法 $watch 来响应数据的变化，回顾之前的vue提供的实例方法及实例属性，以$开头
+            <div>
+                <p style="font-size: 25px;">计数器:{{counter}} </p>
+                <p>计算器数值变化 {{oldVal}} 变为{{newVal}} </p>
+                <button @click="++counter">点击！</button>
+            </div>
+            <div>
+                千米：<input type="text" v-model="kilometers">=
+                米：<input type="text" v-model="meters">
+            </div>
+            <p>如果调用 $watch 的实例方法来监听属性，那它会在 watch 属性的后面执行</p>
+        </div>
+        <div id="classes6">
+            <h2>样式绑定</h2>
+            <hr>
+            <div>vue.js的v-bind 在处理 class 和 style 时，专门增强了它。表达式的结果类型除了字符串之外，还可以是对象或数组</div>
+            <h2>class属性绑定</h2>
+            <hr>
+            <div v-bind:class="{'active': isActive}">实例中isActive的true/false值决定该class是否显示</div>
+            <div v-bind:class="{'active': isActive, 'font-style': isActive}">传入多个属性{'active': isActive, 'font-style': isActive}</div>
+            <div v-bind:class="classObject">传入个对象classObject</div>
+            <div v-bind:class="[classObject, errorClass ? '':'active']">绑定个数组[classObject, errorClass ? '':'active']</div>
+            <h2>style(内联样式)</h2>
+            <hr>
+            <div v-bind:style="{color: activeColor}">直接设置{color: activeColor}</div>
+            <div v-bind:style="activeObject">直接绑定一个样式对象activeObject</div>
+            <div v-bind:style="[activeObject]">绑定个数组[activeObject]</div>
+            <div>注意：当 v-bind:style 使用需要特定前缀的 CSS 属性时，如 transform ，Vue.js 会自动侦测并添加相应的前缀。</div>
+        </div>
+        <div id="classes7">
+            <h2>事件处理器</h2>
+            <hr>
+            <div>事件监听可以使用v-on指令</div>
+            <button v-on:click="counter += 1">+1</button>
+            <div>按钮被点击了{{counter}}次 </div>
+            <h2>事件修饰符</h2>
+            <hr>
+            vue.js 为v-on提供了事件修饰符来处理DOM事件细节，如event.preventDefault()或event.stopPropagation()<br>
+            vue.js 通过由点(.)表示的指令后缀来调用修饰符
+            <ul>
+                <li>.stop</li>
+                <li>.prevent</li>
+                <li>.capture</li>
+                <li>.self</li>
+                <li>.once</li>
+            </ul>
+            <ul>
+                <li><a v-on:click.stop="handle">阻止单击事件冒泡 v-on:click.stop ，事件冒泡是从目标DOM到最外面DOM</a></li>
+                <li><form v-on:submit.prevent="handle">提交事件不再重载页面 v-on:submit.prevent</form></li>
+                <li><a v-on:click.stop.prevent="handle">修饰符可以串联 v-on:click.stop.prevent</a></li>
+                <li><form v-on:submit.prevent>只有修饰符 v-on:submit.prevent 没处理函数</form></li>
+                <li><div v-on:click.capture="handle">添加事件侦听器时使用事件捕获模式 v-on:click.capture，捕获模式是从最外面DOM到目标DOM</div></li>
+                <li><div v-on:click.self="handle">只当事件在该元素本身（而不是子元素）触发时触发回调 v-on:click.self </div></li>
+                <li><a v-on:click.once="handle">click 事件只能点击一次，2.1.4版本新增 v-on:click.once</a></li>
+            </ul>
+            <h2>按键修饰符</h2>
+            <hr>
+            <div>允许为v-on监听键盘事件时添加按键修饰符</div>
+            <input type="text" v-on:keyup.13="handle" value="只有在 keyCode 是 13 时调用 vm.handle()">
+            <div>
+                <input type="text" v-on:keyup.enter="handle" value="使用按键别名">
+                <div>全部按键别名</div>
+                <ul>
+                    <li>.enter</li>
+                    <li>.tab</li>
+                    <li>.delete(“删除”或“退格”键)</li>
+                    <li>.esc</li>
+                    <li>.space</li>
+                    <li>.up</li>
+                    <li>.down</li>
+                    <li>.left</li>
+                    <li>.right</li>
+                    <li>.ctrl</li>
+                    <li>.alt</li>
+                    <li>.shift</li>
+                    <li>.meta</li>
+                </ul>
+                <div>
+                    <input type="text" @keyup.alt.67="handle" value="依旧可以串联,如这里的alt+c">
+                </div>
+                <div>
+                    <input type="text" @click.ctrl="handle" value="这里的ctrl+click">
+                </div>
+            </div>
+        </div>
+        <div id="classes8">
+            <h2>表单</h2>
+            <hr>
+            <div>可以使用v-model指令在表单控件元素上创建双向数据绑定</div>
+            <div>
+                输入框
+                <hr>
+                <div>
+                    <input type="text" v-model="inputFrame" placeholder="使用v-model实现双向数据绑定">
+                    <p>{{inputFrame}} </p>
+                </div>
+
+                复选框
+                <hr>
+                <div>
+                    <p>单个复选框：</p>
+                    <input type="checkbox" id="checkbox" v-model="checked">
+                    <label for="checkbox">{{checked}} </label>
+                    <p>全选:</p>
+                    <input type="checkbox" id="all-checked" v-model="allChecked" @change="allCheckedMethod">
+                    <label for="all-checked">{{allChecked}} </label>
+                    <p>多个复选框：</p>
+                    <input type="checkbox" id="runoob" value="a" v-model="checkedNames">
+                    <label for="runoob">a</label>
+                    <input type="checkbox" id="runoob-b" value="b" v-model="checkedNames">
+                    <label for="runoob-b">b</label>
+                    <input type="checkbox" id="runoob-c" value="c" v-model="checkedNames">
+                    <label for="runoob-c">c</label>
+                    <p>选择的值为:{{checkedNames}} </p>
+                </div>
+
+                单选按钮
+                <hr>
+                <div>
+                    <input id="radio-a" type="radio" value="a" v-model="picked">
+                    <label for="radio-a">a</label>
+                    <input id="radio-b" type="radio" value="b" v-model="picked">
+                    <label for="radio-b">b</label>
+                    <p>选中的值为:{{picked}} </p>
+                </div>
+
+                select列表
+                <hr>
+                <div>
+                    <select v-model="selected" name="fruit">
+                        <option value="">选择一个网站</option>
+                        <option value="Runoob">Runoob</option>
+                        <option value="Google">Google</option>
+                    </select>
+                    <div>选择的网站是:{{selected}} </div>
+                </div>
+            </div>
+            <h2>修饰符</h2>
+            <hr>
+            <ul>
+                <li>
+                    <div>.lazy</div>
+                    <input type="text" v-model.lazy="inputLazy">
+                    <p>默认情况下，input事件同步输入框的值与数据，加了它转变为change事件。{{inputLazy}} </p>
+                </li>
+                <li>
+                    <div>.number</div>
+                    <input type="number" v-model.number="inputNumber">
+                    <p>将用户输入转为Number类型(如果原值结果为NaN则返回原值)。 {{inputNumber}} </p>
+                </li>
+                <li>
+                    <div>.trim</div>
+                    <input type="text" v-model.trim="inputTrim">
+                    <p>它可以自动去除首尾空格。 <span style="background-color: #ccc;">{{inputTrim}}</span></p>
+                </li>
+            </ul>
+        </div>
+        <div id="classes9">
+            <h2>组件</h2>
+            <hr>
+            <div>
+                组件可以扩展HTML元素，封装可重用的代码
+                <div>
+                    <p>注册全局组件语法：Vue.component(tagName, options)，其中tagName为组件名，options为配置选项</p>
+                    <p>注册后使用&lt;tagName&gt;&lt;/tagName&gt;的方式来调用组件</p>
+                </div>
+            </div>
+            全局组件
+            <hr>
+            <div>所有实例都能使用到它</div>
+            <cman-global></cman-global>
+            <br>
+            局部组件(只能在实例内使用)
+            <hr>
+            <cman-local></cman-local>
+            <h2>Prop</h2>
+            <hr>
+            <div>
+                <p>prop是子组件用来接收父组件传递过来的数据的一个自定义属性</p>
+                <p>父组件的数据需要通过props把数据传给子组件，子组件需要显式的用props选项声明“prop"</p>
+            </div>
+            <cman-local message="父组件传递数据给子组件"></cman-local>
+            <h2>动态Prop</h2>
+            <hr>
+            <div>类型用v-bind绑定html特性到一个表达式，也可以用v-bind动态绑定props的值到父组件的数据中，每当父组件的数据变化时，该变化也会传导给子组件</div>
+            <label>改变父组件的值</label><input type="text" v-model="message">
+            <cman-local-prop v-bind:message="message"></cman-local-prop>
+            <div style="font-weight: bold;">注意：prop是单向绑定的，即当父组件的属性变化时，将传导给子组件，但是不会反过来</div>
+            <h2>Prop验证</h2>
+            <hr>
+            <div>
+                <p>组件可以为props指定验证要求</p>
+                <p>为了定制 prop 的验证方式，你可以为 props 中的值提供一个带有验证需求的对象，而不是一个字符串数组。</p>
+            </div>
+            <h2>自定义事件</h2>
+            <hr>
+            <div>
+                <p>父组件使用 props 传递数据给子组件，但如果子组件要把数据传递回去，就需要使用自定义事件</p>
+                <p>
+                    我们可以使用 v-on 绑定自定义事件，每个vue实例都实现了事件接口(event interface)，即
+                    <ul>
+                        <li>使用 $on(eventName) 监听事件</li>
+                        <li>使用 $emit(eventName) 触发事件</li>
+                    </ul>
+                    <div>另外，父组件可以在使用子组件的地方直接用 v-on 来监听子组件触发的事件。</div>
+                </p>
+            </div>
+            <p>{{total}} </p>
+            <button-counter v-on:increment="incrementTotal"></button-counter>
+            <button-counter v-on:increment="incrementTotal"></button-counter>
+        </div>
+        <div id="classes10"></div>
+        <div id="classes11"></div>
+        <div id="classes12"></div>
+        <div id="classes13"></div>
+        <div id="classes14"></div>
+        <div id="classes15"></div>
+        <div id="classes16"></div>
+        <div id="classes17"></div>
+    </content>
+
+
+    <!-- 初始化脚本 -->
+    <script type="text/javascript">
+        // 模拟栈容器，记录显示的课程内容
+        let contentLIFO = [];
+        // 标题内容映射对象
+        const navContentORM = {
+            'nav-classes1': {
+                value: 'classes1',
+                name: '模板语法'
+            },
+            'nav-classes2': {
+                value: 'classes2',
+                name: '条件语句'
+            },
+            'nav-classes3': {
+                value: 'classes3',
+                name: '循环语句'
+            },
+            'nav-classes4': {
+                value: 'classes4',
+                name: '计算属性'
+            },
+            'nav-classes5': {
+                value: 'classes5',
+                name: '监听属性'
+            },
+            'nav-classes6': {
+                value: 'classes6',
+                name: '样式绑定'
+            },
+            'nav-classes7': {
+                value: 'classes7',
+                name: '事件处理器'
+            },
+            'nav-classes8': {
+                value: 'classes8',
+                name: '表单'
+            },
+            'nav-classes9': {
+                value: 'classes9',
+                name: '组件'
+            },
+            'nav-classes10': {
+                value: 'classes10',
+                name: '自定义指令'
+            },
+            'nav-classes11': {
+                value: 'classes11',
+                name: '路由'
+            },
+            'nav-classes12': {
+                value: 'classes12',
+                name: '过渡&动画'
+            },
+            'nav-classes13': {
+                value: 'classes13',
+                name: '混入'
+            },
+            'nav-classes14': {
+                value: 'classes14',
+                name: 'Ajax(axios)'
+            },
+            'nav-classes15': {
+                value: 'classes15',
+                name: 'Ajax(vue-resource)'
+            },
+            'nav-classes16': {
+                value: 'classes16',
+                name: '响应接口'
+            },
+            'nav-classes17': {
+                value: 'classes17',
+                name: '实例'
+            }
+        };
+
+        // 点击事件处理
+        let navs = document.getElementsByTagName('nav')[0];
+        let navDiv = navs.getElementsByTagName('div');
+        for (let nav of navDiv) {
+            nav.onclick = function(event) {
+                let showContentId = navContentORM[nav.getAttribute('id')].value;
+                let beforeShowContentId = contentLIFO.shift();
+                contentLIFO.push(showContentId);
+
+                beforeShowContentId && (document.getElementById(beforeShowContentId)
+                    .style.setProperty('display', 'none'));
+                document.getElementById(showContentId).style.setProperty('display', 'block');
+                contentMethod[showContentId]();
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        thisContent = 8;
+        const contentMethod = {
+            classes1: function() {
+                let vm = new Vue({
+                    // 挂载点
+                    el: '#classes1',
+                    // 定义属性
+                    data: {
+                        site: 'vue学习',
+                        url: 'http://www.baidu.com',
+                        alexa: '10000',
+                        message: '<p>vue模板语法</p>',
+                        use: false,
+                        ok: true,
+                        id: 1,
+                        userInput: 'v-model指令用在表单控件元素上，根据表单的值自动更新绑定的元素的值',
+                    },
+                    // 定义函数
+                    methods: {
+                        details: function() {
+                            return this.alexa;
+                        },
+                        eventClick: function() {
+                            alert('点击了');
+                        },
+                        onSubmit: function() {
+                            console.log(1);
+                        },
+                        clickHandle: function() {
+                            console.log(2);
+                        }
+                    },
+                    filters: {
+                        capitalize: function(val1, val2) {
+                            return val1 + val2;
+                        }
+                    }
+                });
+
+                setTimeout(function() {
+                    vm.site = 'vue更新值'
+                }, 1000);
+                // vue实例提供的属性与方法，以 $ 前缀为标识
+                // console.log(vm.$el);
+            },
+            classes2: function() {
+                let vm = new Vue({
+                    el: '#classes2',
+                    data: {
+                        seen: true,
+                        ok: true
+                    }
+                });
+            },
+            classes3: function() {
+                let vm = new Vue({
+                    el: '#classes3',
+                    data: {
+                        arrays: ['v-for指令', ' 需要以item in list形式的语法', 'item 是数组元素的迭代别名', 'list是源数组'],
+                        objects: {
+                            val: '支持obj in objs 或者 (value, key) in  objs的语法',
+                            val1: '不仅可以迭代数组',
+                            val2: '还可以迭代对象'
+                        }
+                    }
+                });
+            },
+            classes4: function() {
+                let outVar = 1;
+                let vm = new Vue({
+                    el: '#classes4',
+                    data: {
+                        message: '它在处理一些复杂逻辑时很有用',
+                        name: '给 computed 属性自定义setter时要带上getter，3秒后触发setter',
+                    },
+                    methods: {
+                        callVar: function() {
+                            return ++outVar;
+                        }
+                    },
+                    computed: {
+                        reverseMessage: function() {
+                            return this.message.split('').reverse().join('');
+                        },
+                        callOutVar: function() {
+                            return ++outVar;
+                        },
+                        site: {
+                            set: function(val) {
+                                this.name = val;
+                            },
+                            get: function() {
+                                return this.name;
+                            }
+                        }
+                    }
+                });
+                setTimeout(function() {
+                    vm.site = '这里我给 computed 属性自定义了一个settter，并且修改computed属性中reverseMessage的依赖属性message';
+                    vm.message = '修改依赖属性message';
+                }, 3000);
+            },
+            classes5: function() {
+                let vm = new Vue({
+                    el: '#classes5',
+                    data: {
+                        counter: 1,
+                        newVal: 0,
+                        oldVal: 0,
+                        kilometers: 0,
+                        meters: 0
+                    },
+                    watch: {
+                        kilometers: function(val) {
+                            this.kilometers = val;
+                            this.meters = this.kilometers * 1000;
+                        },
+                        meters: function(val) {
+                            this.meters = val;
+                            this.kilometers = this.meters / 1000;
+                        }
+                    }
+                });
+                vm.$watch('counter', function(nval, oval) {
+                    this.newVal = nval;
+                    this.oldVal = oval;
+                });
+            },
+            classes6: function() {
+                let vm = new Vue({
+                    el: '#classes6',
+                    data: {
+                        activeColor: 'green',
+                        activeFontSize: '18',
+                        activeObject: {
+                            color: 'green',
+                            'font-size': '18px'
+                        },
+                        isActive: true,
+                        errorClass: false,
+                        classObject: {
+                            'font-style': true
+                        }
+                    }
+                });
+            },
+            classes7: function() {
+                let vm = new Vue({
+                    el: '#classes7',
+                    data: {
+                        counter: 0
+                    },
+                    methods: {
+                        handle: function() {
+                            alert('event...')
+                        }
+                    }
+                });
+            },
+            classes8: function() {
+                let vm = new Vue({
+                    el: '#classes8',
+                    data: {
+                        checkedNameList: ['a', 'b', 'c'],
+                        inputFrame: '',
+                        checked: false,
+                        allChecked: false,
+                        checkedNames: [],
+                        picked: 'a',
+                        selected: '',
+                        inputLazy: '',
+                        inputNumber: '0',
+                        inputTrim: ''
+                    },
+                    methods: {
+                        allCheckedMethod: function() {
+                            if (this.allChecked) {
+                                let array = [];
+                                for (let item of this.checkedNameList) {
+                                    array.push(item);
+                                }
+                                this.checkedNames = array;
+                            } else {
+                                this.checkedNames.length = 0;
+                            }
+                        }
+                    },
+                    watch: {
+                        checkedNames: function(nval, oval) {
+                            if (this.checkedNames.length === this.checkedNameList.length) {
+                                this.allChecked = true;
+                            } else {
+                                this.allChecked = false;
+                            }
+                        }
+                    }
+                });
+            },
+            classes9: function() {
+                Vue.component('cman-global', {
+                    template: '<div>全局组件-自定义组件，我声明了cman-global组件！</div>'
+                });
+                let child = {
+                    template: '<div>局部组件-自定义组件，我声明了cman-local组件！,我要获取父组件传递的数据message:{{message}} </div>',
+                    props: ['message']
+                };
+                let child2 = {
+                    template: '<div>局部组件-动态Prop，传递的值message:{{message}} </div>',
+                    // props: ['message']
+                    props: {
+                        message: String,
+                       /* // 基础的类型检查 (`null` 和 `undefined` 会通过任何类型验证)
+                        propA: Number,
+                        // 多个可能的类型
+                        propB: [String, Number],
+                        // 必填的字符串
+                        propC: {
+                          type: String,
+                          required: true
+                        },
+                        // 带有默认值的数字
+                        propD: {
+                          type: Number,
+                          default: 100
+                        },
+                        // 带有默认值的对象
+                        propE: {
+                          type: Object,
+                          // 对象或数组默认值必须从一个工厂函数获取
+                          default: function () {
+                            return { message: 'hello' }
+                          }
+                        },
+                        // 自定义验证函数
+                        propF: {
+                          validator: function (value) {
+                            // 这个值必须匹配下列字符串中的一个
+                            return ['success', 'warning', 'danger'].indexOf(value) !== -1
+                          }
+                        }
+                        type可以是原生构造器：String、Number、Boolean、Array、Object、Date、Function、Symbol，
+                        也可以是自定义构造器，使用instanceof检测
+                        */
+                    }
+                };
+                let vm = new Vue({
+                    el: '#classes9',
+                    data: {
+                        message: '父组件的值'
+                    },
+                    components: {
+                        'cman-local': child,
+                        'cman-local-prop': child2
+                    }
+                });
+            },
+            classes10: function() {
+                let vm = new Vue({
+                    el: ''
+                });
+            },
+            classes11: function() {
+                let vm = new Vue({
+                    el: ''
+                });
+            },
+            classes12: function() {
+                let vm = new Vue({
+                    el: ''
+                });
+            },
+            classes13: function() {
+                let vm = new Vue({
+                    el: ''
+                });
+            },
+            classes14: function() {
+                let vm = new Vue({
+                    el: ''
+                });
+            },
+            classes15: function() {
+                let vm = new Vue({
+                    el: ''
+                });
+            },
+            classes16: function() {
+                let vm = new Vue({
+                    el: ''
+                });
+            },
+            classes17: function() {
+                let vm = new Vue({
+                    el: ''
+                });
+            }
+        };
+
+        // 调试
+        (function() {
+            let nav = document.getElementsByTagName('nav')[0];
+            nav.getElementsByTagName('div')[thisContent].click();
+        })();
+    </script>
+</body>
+</html>
