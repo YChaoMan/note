@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>组件-自定义事件</title>
+	<title>自定义指令</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
 	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -397,6 +397,10 @@
             <p>{{total}} </p>
             <button-counter v-on:increment="incrementTotal"></button-counter>
             <button-counter v-on:increment="incrementTotal"></button-counter>
+			<div>监听原生事件可以使用 .native 修饰 v-on</div>
+			<hr>
+			<button-counter v-on:click.native="nativeMethod"></button-counter>
+			<div>子组件的data是一个函数而不是一个对象，这样做可以避免影响不同的实例</div>
         </div>
         <div id="classes10"></div>
         <div id="classes11"></div>
@@ -747,15 +751,39 @@
                         */
                     }
                 };
+				let child3 = {
+					template: '<button v-on:click="incrementHandler">{{counter}} </button>',
+					data: function() {
+						return {
+							counter: 0
+						};
+					},
+					methods: {
+						incrementHandler: function() {
+							++this.counter;
+							this.$emit('increment');
+						}
+					}
+				};
                 let vm = new Vue({
                     el: '#classes9',
                     data: {
-                        message: '父组件的值'
+                        message: '父组件的值',
+						total: 0
                     },
                     components: {
                         'cman-local': child,
-                        'cman-local-prop': child2
-                    }
+                        'cman-local-prop': child2,
+						'button-counter': child3
+                    },
+					methods: {
+						incrementTotal: function() {
+							++this.total;
+						},
+						nativeMethod: function() {
+							console.log(arguments);
+						}
+					}
                 });
             },
             classes10: function() {
