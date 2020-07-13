@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>自定义指令</title>
+	<title>路由</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
 	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -402,7 +402,53 @@
 			<button-counter v-on:click.native="nativeMethod"></button-counter>
 			<div>子组件的data是一个函数而不是一个对象，这样做可以避免影响不同的实例</div>
         </div>
-        <div id="classes10"></div>
+        <div id="classes10">
+			<h2>自定义指令</h2>
+			<hr>
+			<div>除了默认设置的核心指令(v-model、v-bind)。Vue也允许注册自定义指令</div>
+			<div>全局指令</div>
+			<hr>
+			<input v-focus>
+			<p>页面载入时，上面的 input 元素自动获得焦点并失去<p>
+			<div>局部指令</div>
+			<hr>
+			<input v-focus>
+			<p>页面载入时，上面的 input 元素自动获得焦点<p>
+			<h2>钩子函数</h2>
+			<hr>
+			<div>指令定义函数提供了几个钩子函数(可选)</div>
+			<ul>
+				<li>bind：只调用一次，指令第一次绑定到元素时调用，用这个钩子函数可以定义一个在绑定时执行一次的初始化动作</li>
+				<li>inserted：被绑定元素插入父节点时调用（父节点存在即可调用，不必存在于 document 中）</li>
+				<li>update：被绑定元素所在的模板更新时调用，而不论绑定值是否变化。通过比较更新前后的绑定值，可以忽略不必要的模板更新</li>
+				<li>componentUpdated：被绑定元素所在模板完成一次更新周期时调用</li>
+				<li>unbind：只调用一次</li>
+			</ul>
+			<h2>钩子函数参数</h2>
+			<hr>
+			<ul>
+				<li>el：指令说绑定的元素，可以用来直接操作DOM</li>
+				<li>binding:一个对象
+					<ul>
+						<li>name：指令名，不包括 v- 前缀</li>
+						<li>value：指令的绑定值，	例如 v-my="1+1"，value的值为2.v-my="name" name为实例的定义数据且为cman，则value为cman，实例中数据没定义则为undefined</li>
+						<li>oldValue：指令绑定的前一个值，尽在update、componentUpdated钩子中可用，无论值是否改变都可用</li>
+						<li>expression：绑定值的表达式或变量名，例如 v-my="1+1"，expression的值是1+1</li>
+						<li>arg：传给指令的参数，例如 v-my:name，arg的值是name</li>
+						<li>modifiers：一个包含修饰符的对象，例如 v-my.name.bar，修饰符对象的值是{name: true, bar:  true}</li>
+					</ul>
+				</li>
+				<li>vnode：	Vue编译生成的虚拟节点</li>
+				<li>oldVnode：上一个虚拟节点，尽在update、componentUpdated钩子中可用</li>
+			</ul>
+			<div>&lt;div v-cman:boy.name.age="1+2"&gt;&lt;/div&gt;</div>
+			<div v-cman:boy.name.age="1+2"></div><br>
+			<div>指令函数可接受所有合法的JavaScript表达式</div>
+			<hr>
+			<div>&lt;div v-runoob="{ color: 'green', text: '菜鸟教程!' }"&gt;</div>
+			<div v-runoob="{ color: 'green', text: '菜鸟教程!' }"></div>
+			<div>这里没有使用到钩子函数，可以简写函数，即把钩子参数去掉，直接写方法</div>
+		</div>
         <div id="classes11"></div>
         <div id="classes12"></div>
         <div id="classes13"></div>
@@ -506,7 +552,7 @@
         }
     </script>
     <script type="text/javascript">
-        thisContent = 8;
+        thisContent = 9;
         const contentMethod = {
             classes1: function() {
                 let vm = new Vue({
@@ -751,20 +797,20 @@
                         */
                     }
                 };
-		let child3 = {
-			template: '<button v-on:click="incrementHandler">{{counter}} </button>',
-			data: function() {
-				return {
-					counter: 0
+				let child3 = {
+					template: '<button v-on:click="incrementHandler">{{counter}} </button>',
+					data: function() {
+						return {
+							counter: 0
+						};
+					},
+					methods: {
+						incrementHandler: function() {
+							++this.counter;
+							this.$emit('increment');
+						}
+					}
 				};
-			},
-			methods: {
-				incrementHandler: function() {
-					++this.counter;
-					this.$emit('increment');
-				}
-			}
-		};
                 let vm = new Vue({
                     el: '#classes9',
                     data: {
@@ -787,8 +833,38 @@
                 });
             },
             classes10: function() {
+				Vue.directive('focus', {
+					inserted: function(el) {
+						el.focus();
+					}
+				});
                 let vm = new Vue({
-                    el: ''
+                    el: '#classes10',
+					directives: {
+						// 注册一个 v-focus 的局部指令
+						focus: {
+							inserted: function(el) {
+								el.focus();
+							}
+						},
+						cman: {
+							bind: function(el, binding, vnode) {
+								var s = JSON.stringify
+								el.innerHTML =
+								  'name: '       + s(binding.name) + '<br>' +
+								  'value: '      + s(binding.value) + '<br>' +
+								  'expression: ' + s(binding.expression) + '<br>' +
+								  'argument: '   + s(binding.arg) + '<br>' +
+								  'modifiers: '  + s(binding.modifiers) + '<br>' +
+								  'vnode keys: ' + Object.keys(vnode).join(', ')
+							}
+						},
+						runoob: function(el, binding) {
+							// 简写方式设置文本及背景颜色
+							el.innerHTML = binding.value.text
+							el.style.backgroundColor = binding.value.color
+						}
+					}
                 });
             },
             classes11: function() {
