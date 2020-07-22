@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>路由 &lt;router-link&gt;</title>
+	<title>Vue.js</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
 	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 	<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
     <style type="text/css">
         body {
             display: flex;
@@ -463,15 +465,235 @@
             </div>
             <p>路由出口，路由匹配到的组件将渲染在下面这个元素</p>
             <router-view></router-view>
+            <h2>router-link相关属性</h2>
+            <hr>
+            <ul>
+                <li>
+                    <label>to</label>
+                    <div>表示目标路由的链接，当被点击后，内部会立刻把to的值传给router push(),所以这个值可以是一个字符串或者是描述目标位置的对象</div>
+                    <p>字符串</p>
+                    <router-link to="home">&lt;router-link to="home"&gt;Home&lt;/router-link&gt;</router-link>
+                    <p>也可以使用v-bind的JS表达式或者v-bind的简写， :属性</p>
+                    <router-link v-bind:to="'home'">&lt;router-link v-bind:to="'home'"&gt;Home&lt;/router-link&gt;</router-link>
+                    <p>绑定一个对象</p>
+                    <router-link :to="{path: 'home'}">&lt;router-link :to="{path: 'home'}"&gt;Home&lt;/router-link&gt;</router-link>
+                    <p>命名的路由</p>
+                    <router-link :to="{name: 'user', params: {userId: 123}}">&lt;router-link :to="{name: 'user', params: {userId: 123}}"&gt;&lt;/router-link&gt;</router-link>
+                    <p>带查询参数</p>
+                    <router-link :to="{path: '/register', query: {plan: 'private'}}">&lt;router-link :to="{path: '/register', query: {plan: 'private'}}"&gt;&lt;/router-link&gt;</router-link>
+                </li>
+                <li>
+                    <label>replace</label>
+                    <div>设置 replace 属性的话，当点击时，会调用 router.replace() 而不是 router.push()，导航后不会留下 history 记录。</div>
+                    <router-link :to="{ path: '/abc'}" replace>&lt;router-link :to="{ path: '/abc'}" replace&gt;&lt;/router-link&gt;</router-link>
+                </li>
+                <li>
+                    <label>append</label>
+                    <div>设置 append 属性后，则在当前 (相对) 路径前添加其路径。例如，我们从 /a 导航到一个相对路径 b，如果没有配置 append，则路径为 /b，如果配了，则为 /a/b</div>
+                    <router-link :to="{path: 'relative/path'}" append>&lt;router-link :to="{path: 'relative/path'}" append&gt;&lt;/router-link&gt;</router-link>
+                </li>
+                <li>
+                    <label>tag</label>
+                    <div>有时候想要 &lt;router-link&gt; 渲染成某种标签，例如 &lt;p&gt;。 于是我们使用 tag prop 类指定何种标签，同样它还是会监听点击，触发导航。</div>
+                    <router-link :to="{path: '/abc'}" tag="p">&lt;router-link :to="{path: '/abc'}" tag="p"&gt;&lt;/router-link&gt;</router-link>
+                </li>
+                <li>
+                    <label>exact-active-class</label>
+                    <div>配置当链接被精确匹配的时候应该激活的 class。可以通过以下代码来替代。</div>
+                    <router-link :to="{path: '/abc'}" exact-active-class="_active">&lt;router-link :to="{path: '/abc'}" exact-active-class="_active"&gt;&lt;/router-link&gt;</router-link>
+                    <router-link :to="{path: '/abc'}" tag="p">&lt;router-link :to="{path: '/abc'}" tag="p"&gt;&lt;/router-link&gt;</router-link>
+                    <div>
+                        <h3>exact-active-class 和 active-class 的区别(全匹配与模糊)</h3>
+                        <div>router-link 默认情况下的路由是模糊匹配，例如当前路径是 /article/1 那么也会激活 &lt;router-link to="/article"&gt;，所以当设置 exact-active-class 以后，这个 router-link 只有在当前路由被全包含匹配时才会被激活 exact-active-class 中的 class，</div>
+                    </div>
+                </li>
+                <li>
+                    <label>event</label>
+                    <div>声明可以用来触发导航的事件。可以是一个字符串或是一个包含字符串的数组。</div>
+                    <router-link :to="{path: 'abc'}" event="mouseover" append>&lt;router-link :to="{path: 'abc'}" event="mouseover" append&gt;&lt;/router-link&gt;</router-link>
+                    <p>当鼠标移动到上面时，自动触发&lt;router-link&gt;标签，看导航栏变化</p>
+                </li>
+            </ul>
 		</div>
-        <div id="classes12"></div>
-        <div id="classes13"></div>
-        <div id="classes14"></div>
-        <div id="classes15"></div>
-        <div id="classes16"></div>
-        <div id="classes17"></div>
+        <div id="classes12">
+        	<h2>过渡</h2>
+        	<hr />
+        	<a target="_blank" href="https://cn.vuejs.org/v2/guide/transitions.html">官网例子</a>
+        	<div>注意，这要依赖CSS进行</div>
+        </div>
+        <div id="classes13">
+        	<h2>混入</h2>
+        	<hr />
+        	<div>混入(mixins)定义了一部分可复用的方法或者计算属性。混入对象可以包含任意组件选项。当组件使用混入对象时，所有混入对象的选项将被混入该组件本身的选项。</div>
+        	<h2>选项合并</h2>
+        	<hr />
+        	<div>当组件和混入的对象含有同名选项时，这些选项以恰当的方式混合。</div>
+        	<div>比如，数据对象在内部会进行浅合并 (一层属性深度)，在和组件的数据发生冲突时以组件数据优先。</div>
+        	<div>如果methods有同名函数，那Vue实例的优先级会更高一些。比如下面这个混入对象的methods与Vue实例中的methods存在同名方法</div>
+        	<h2>全局混入</h2>
+        	<hr />
+        	<div>也可以全局注册混入对象。注意使用！ 一旦使用全局混入对象，将会影响到 所有 之后创建的 Vue 实例。使用恰当时，可以为自定义对象注入处理逻辑	</div>
+        </div>
+        <div id="classes14">
+        	<h2>Vue.js 2.0版本推荐使用Axios来完成ajax请求，Axios是一个基于Promise的HTTP库，可以用在浏览器和node.js中</h2>
+        	<hr />
+        	<h2>GET请求</h2>
+        	<hr />
+        	<div>
+        		<p>{{weatherG.city}} {{weatherG.weather}} {{weatherG.wind}} {{weatherG.temp}}</p>
+        	</div>
+        	<h2>POST请求</h2>
+        	<hr />
+        	<div>
+        		<p>{{weatherP.city}} {{weatherP.weather}} {{weatherP.wind}} {{weatherP.temp}}</p>
+        	</div>
+        	<h2>执行多个并发请求</h2>
+        	<hr />
+        	<div>
+        		<label>GET</label>
+        		<p>{{weatherAllG.city}} {{weatherAllG.weather}} {{weatherAllG.wind}} {{weatherAllG.temp}}</p>
+        		<label>POST</label>
+        		<p>{{weatherAllP.city}} {{weatherAllP.weather}} {{weatherAllP.wind}} {{weatherAllP.temp}}</p>
+        	</div>
+        	<h2>请求方法的别名</h2>
+        	<hr />
+        	<div>
+        		为方便使用，官方为所有支持的请求方法提供了别名，可以直接使用别名来发起请求：<br />
+				axios.request(config)<br />
+				axios.get(url[, config])<br />
+				axios.delete(url[, config])<br />
+				axios.head(url[, config])<br />
+				axios.post(url[, data[, config]])<br />
+				axios.put(url[, data[, config]])<br />
+				axios.patch(url[, data[, config]])<br />
+				注意：在使用别名方法时， url、method、data 这些属性都不必在配置中指定。
+        	</div>
+        	<h2>响应结构</h2>
+        	<hr />
+        	<div>
+        		{<br />
+				  &nbsp;&nbsp;// `data` 由服务器提供的响应<br />
+				  &nbsp;&nbsp;data: {},<br />
+				  &nbsp;&nbsp;// `status`  HTTP 状态码<br />
+				  &nbsp;&nbsp;status: 200,<br />
+				  &nbsp;&nbsp;// `statusText` 来自服务器响应的 HTTP 状态信息<br />
+				  &nbsp;&nbsp;statusText: "OK",<br />
+				  &nbsp;&nbsp; // `headers` 服务器响应的头<br />
+				  &nbsp;&nbsp; headers: {},<br />
+				  &nbsp;&nbsp;// `config` 是为请求提供的配置信息<br />
+				  &nbsp;&nbsp;config: {}<br />
+				}
+        	</div>
+        	<h2>拦截器</h2>
+        	<hr />
+        	<div>在请求或响应被 then 或 catch 处理前拦截它们。</div>
+        	<div>
+        		// 添加请求拦截器<br />
+				axios.interceptors.request.use(function (config) {<br />
+				    // 在发送请求之前做些什么<br />
+				    return config;<br />
+				  }, function (error) {<br />
+				    // 对请求错误做些什么<br />
+				    return Promise.reject(error);<br />
+				  });<br />
+				<br />
+				// 添加响应拦截器<br />
+				axios.interceptors.response.use(function (response) {<br />
+				    // 对响应数据做点什么<br />
+				    return response;<br />
+				  }, function (error) {<br />
+				    // 对响应错误做点什么<br />
+				    return Promise.reject(error);<br />
+				  });
+        	</div>
+        	<div><br />
+        		如果你想在稍后移除拦截器，可以这样：
+				<br />
+				var myInterceptor = axios.interceptors.request.use(function () {/*...*/});<br />
+				axios.interceptors.request.eject(myInterceptor);<br />
+				<br />可以为自定义 axios 实例添加拦截器。
+				<br />
+				var instance = axios.create();<br />
+				instance.interceptors.request.use(function () {/*...*/});
+        	</div>
+        </div>
+        <div id="classes15">
+            <h2>Vue 要实现异步加载需要使用到 vue-resource 库</h2>
+            <hr>
+            <h2>GET请求</h2>
+            <hr>
+            <div>
+                <button @click="getMethod">发送GET请求</button>
+                <div>{{get}}</div>
+            </div>
+            <h2>POST请求</h2>
+            <hr>
+            <div>
+                <button @click="postMethod">发送POST请求</button>
+                <div>{{post}}</div>
+            </div>
+            <h2>语法 & API</h2>
+            <hr>
+            <div>你可以使用全局对象方式 Vue.http 或者在一个 Vue 实例的内部使用 this.$http来发起 HTTP 请求。</div>
+            <ul>
+                <li>[Vue.http | this.$http].get('/someUrl', [options]).then(successCallback, errorCallback);</li>
+                <li>[Vue.http | this.$http].post('/someUrl', [body], [options]).then(successCallback, errorCallback);</li>
+            </ul>
+            <div>vue-resource提供七种请求API(REST 风格)</div>
+            <ol>
+                <li>get(url, [options])</li>
+                <li>head(url, [options])</li>
+                <li>delete(url, [options])</li>
+                <li>jsonp(url, [options])</li>
+                <li>post(url, [body], [options])</li>
+                <li>put(url, [body], [options])</li>
+                <li>patch(url, [body], [options])</li>
+            </ol>
+            <h2>JSONP请求</h2>
+            <hr>
+            <div>
+                <button @click="jsonpMethod">百度JSONP请求</button>
+                <div>{{jsonp}}</div>
+            </div>
+            <hr>
+            <div>jsonp默认是callback,百度缩写成了cb</div>
+        </div>
+        <div id="classes16">
+        	<h2>响应接口</h2>
+        	<hr />
+        	<div>Vue可以添加数据动态响应接口，如我们通过使用 $watch 属性来实现数据的监听，$watch 必须添加在 Vue 实例之外才能实现正确的响应</div>
+        	<div>
+    			<button @click = "counter++" style = "font-size:25px;">计数器: {{ counter }}</button>
+        	</div>
+        	<div>
+        		<p>Vue不允许在已经创建的实例上动态添加新的根级响应式属性</p>
+        		<p>Vue不能检测到根级响应式属性的添加或者删除，最好的方式就是在初始化实例的时候声明根级响应式属性，哪怕只是一个空值</p>
+        		<p>如果我们需要在运行时实现属性的添加或者删除，可以使用全局Vue、Vue.set、Vue.delete方法</p>
+        	</div>
+        	<h2>Vue.set</h2>
+        	<hr />
+        	<div>用于置对象的属性，它可以解决 Vue 无法检测添加属性的限制 </div>
+        	<ul>
+        		Vue.set( target, key, value )
+        		<li>target: 可以是对象或数组</li>
+        		<li>key : 可以是字符串或数字</li>
+        		<li>value: 可以是任何类型</li>
+        	</ul>
+        	<div>
+    			<button @click = "products.id++" style = "font-size:25px;">计数器2: {{ products.id }}</button>
+        	</div>
+        	<div>新增一个属性但不是在实例中新增，那打开控制台(products对象中的qty属性)可以看到该属性没有setter/getter方法，即不是响应式的，那这时候可以通过Vue.set方法</div>
+        	<h2>Vue.delete</h2>
+        	<hr />
+        	<div>删除动态添加的属性</div>
+        	<ul>
+        		语法格式:Vue.delete(target, key)
+        		<li>target: 可以是对象或数组</li>
+        		<li>key : 可以是字符串或数字</li>
+        	</ul>
+        	<button @click="removeAge">移除实例中的age属性，控制台看结果</button>
+        </div>
     </content>
-
 
     <!-- 初始化脚本 -->
     <script type="text/javascript">
@@ -566,7 +788,7 @@
         }
     </script>
     <script type="text/javascript">
-        thisContent = 10;
+        thisContent = 14;
         const contentMethod = {
             classes1: function() {
                 let vm = new Vue({
@@ -909,33 +1131,175 @@
             },
             classes12: function() {
                 let vm = new Vue({
-                    el: ''
+                    el: '#classes12',
+                    data: {
+                    	show: false,
+                    	styleobj: {
+                    		fontSize: '18px',
+                    		color: 'red'
+                    	}
+                    }
                 });
             },
             classes13: function() {
-                let vm = new Vue({
-                    el: ''
+                Vue.mixin({
+                	created: function() {
+                		let myOptions = this.$options.myOption;
+                		if (myOptions) {
+                			alert('全局混入对象,' + myOptions);
+                		}
+                	}
                 });
+            	let myMixin = {
+            		created: function() {
+        				this.startmixin();
+            		},
+            		methods: {
+            			startmixin: function () {
+				            document.write("欢迎来到混入实例<br>");
+				            document.write("<<<<<混入调用<br>");
+				        },
+				        sameMethod: function() {
+            				document.write('混入对象，与实例对象的methods存在相同方法名<br>');
+				        }
+            		}
+            	};
+                let vm = new Vue({
+                    el: '#classes13',
+                    mixins: [myMixin],
+                    methods: {
+                    	sameMethod: function() {
+            				document.write('实例对象，与混入对象methods存在相同方法名<br>');
+				        }
+                    },
+                    created: function() {
+			            document.write("<<<<<组件调用<br>");
+                    },
+                    myOption: true
+                });
+                vm.sameMethod();
+                vm.startmixin();
+                
             },
             classes14: function() {
-                let vm = new Vue({
-                    el: ''
+            	let vm = new Vue({
+                    el: '#classes14',
+                    data: {
+                    	weatherG: {},
+                    	weatherP: {},
+                    	weatherAllG: {},
+                    	weatherAllP: {}
+                    },
+                    mounted: function() {
+                    	axios.get('https://api.help.bj.cn/apis/weather2d/', {
+                    		params: {
+                    			id: '广州'
+                    		}
+                    	})
+                    	.then(response => {
+                    		this.weatherG = response.data;
+                    	})
+                    	.catch(error => {
+                    		console.log('get error:', error);
+                    	});
+                    	
+                    	axios.post('https://api.help.bj.cn/apis/weather2d/', {
+                    		id: '广州'
+                    	})
+                    	.then(response => {
+                    		this.weatherP = response.data;
+                    	})
+                    	.catch(error => {
+                    		console.log('post error:', error)
+                    	});
+                    }
                 });
+                
+            	function getUserAccount() {
+				  	return axios.get('https://api.help.bj.cn/apis/weather2d/', {
+				  		params: {
+				  			id: '阳江'
+				  		}
+				  	});
+				}
+				function getUserPermissions() {
+				  	return axios.post('https://api.help.bj.cn/apis/weather2d/', {
+				  		id: '北京'
+				  	});
+				}
+				axios.all([getUserAccount(), getUserPermissions()])
+				  	.then(axios.spread(function (act, perms) {
+					    vm.weatherAllP = act.data;
+					    vm.weatherAllG = perms.data;
+			  	}));
             },
             classes15: function() {
                 let vm = new Vue({
-                    el: ''
+                    el: '#classes15',
+                    data: {
+                        get: '',
+                        post: '',
+                        jsonp: ''
+                    },
+                    methods: {
+                        getMethod() {
+                            this.$http.get('https://api.help.bj.cn/apis/weather2d/', {
+                                params: {
+                                    id: '广州'
+                                }
+                            }).then(res => {
+                                this.get = res.body;
+                            });
+                        },
+                        postMethod() {
+                            this.$http.post('https://api.help.bj.cn/apis/weather2d/', {
+                                id: '阳江'
+                            }, {
+                                emulateJSON: true
+                            }).then(res => {
+                                this.post = res.body;
+                            });
+                        },
+                        jsonpMethod() {
+                            this.$http.jsonp('https://www.baidu.com/sugrec?pre=1&p=3&ie=utf-8&json=1&prod=pc&from=pc_web', {
+                                params: {
+                                    wd: '广州市'
+                                },
+                                jsonp: 'cb'
+                            }).then(res => {
+                                this.jsonp = res.body;
+                            });
+                        }
+                    }
                 });
             },
             classes16: function() {
+            	let myproduct = {
+            		id: 1,
+            		name: 'cman',
+            		age: 23
+            	};
                 let vm = new Vue({
-                    el: ''
+                    el: '#classes16',
+                    data: {
+                    	counter: 0,
+                    	products: myproduct
+                    },
+                    methods: {
+                    	removeAge: function() {
+                    		Vue.delete(this.products, 'age');
+                    		console.log(this);
+                    	}
+                    }
                 });
-            },
-            classes17: function() {
-                let vm = new Vue({
-                    el: ''
+                vm.$watch('counter', function(nVal, oVal) {
+                	alert('计数值的变化,oVal:[' + oVal + '],nVal:[' + nVal + ']');
                 });
+                console.log(vm);
+                vm.$watch('products.id', function(nVal, oVal) {
+                	alert('计数值2的变化,oVal:[' + oVal + '],nVal:[' + nVal + ']');
+                });
+                Vue.set(myproduct, 'qty', 1);
             }
         };
 
