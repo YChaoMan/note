@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Vue.js</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+    <style type="text/css">
+        body {
+            display: flex;
+            margin: 0;
+        }
+
+        body nav {
+            border-right: 2px dashed #3e3e3e;
+            margin-right: .5vw;
+            overflow-y: auto;
+            height: 100vh;
+        }
+
+        body nav div {
+            height: 8vh;
+            line-height: 8vh;
+            padding: 0 .5vw;
+            text-align: center;
+            color: #3e3e3e;
+            width: auto;
+        }
+
+        body nav div:nth-of-type(odd) {
+            background-color: #87cde299;
+        }
+        
+        body content {
+            height: 100vh;
+            overflow: auto;
+            width: 86.5vw;
+        }
+
+        body content>div {
+            margin-bottom: 10vh;
+            display: none;
+        }
+
+        #list-1, .class1 {
+            color: #00F;
+        }
+
+        .active {
+            color: #00F;
+        }
+
+        .font-style {
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div id="nav-classes1">模板语法</div>
+        <div id="nav-classes2">条件语句</div>
+        <div id="nav-classes3">循环语句</div>
+        <div id="nav-classes4">计算属性</div>
+        <div id="nav-classes5">监听属性</div>
+        <div id="nav-classes6">样式绑定</div>
+        <div id="nav-classes7">事件处理器</div>
+        <div id="nav-classes8">表单</div>
+        <div id="nav-classes9">组件</div>
+        <div id="nav-classes10">自定义指令</div>
+        <div id="nav-classes11">路由</div>
+        <div id="nav-classes12">过渡&动画</div>
+        <div id="nav-classes13">混入</div>
+        <div id="nav-classes14">Ajax(axios)</div>
+        <div id="nav-classes15">Ajax(vue-resource)</div>
+        <div id="nav-classes16">响应接口</div>
+        <div id="nav-classes17">实例</div>
+    </nav>
+    <content>
+    	<div id="classes1">
+            <h2>#插值</h2>
+            <hr>
+            1.文本
+            <p>site:{{site}}</p>
+            <p>url: {{url}}</p>
+            <p>{{details()}} </p>
+            2.html
+            <div v-html="message"></div>
+            3.属性
+            <label for="r1">修改颜色</label>
+            <input type="checkbox" v-model="use" id="r1">
+            <div v-bind:class="{'class1': use}">v-bind:class指令</div>
+            4.表达式
+            <div>
+                算术运算：{{512+1024}}<br>
+                布尔判断：{{ok? 'YES' : 'NO'}}<br>
+                字符操作：{{message.split('').reverse().join('')}}
+                <div v-bind:id="'list-' + id">div id属性绑定</div>
+            </div>
+            5.指令(点击上面的 属性 查看效果)
+            <p v-if="!use">指令是带有v-前缀的特殊属性，指令用于在表达式的值改变时，将某些行为应用到 DOM 上。</p>
+            6.参数。比如这里给&lt;a&gt;绑定了href参数
+            <pre><a v-bind:href="url">参数在指令后以冒号指明。</a></pre>
+            7.事件
+            <div>
+                <a v-on:click="eventClick"> v-on 指令，它用于监听 DOM 事件</a>
+            </div>
+            8.修饰符
+            <form v-on:submit.prevent="onSubmit">
+                <div>修饰符以半角句号 . 指明的特殊后缀，用于指出一个指令应该以特殊方式绑定.prevent 修饰符告诉 v-on 指令对于触发的事件调用 event.preventDefault() 禁止默认行为</div>
+                <button type="submit">提交</button>
+            </form>
+            <h2>用户输入</h2>
+            <hr>
+            <div>{{userInput}} </div>
+            <input v-model="userInput">
+            <h2>过滤器</h2>
+            <hr>
+            在两个大括号中或在v-bind指令中。被用作一些常见的文本格式化。由"管道符 | "指示。
+            <div v-bind:alexa="alexa">{{site | capitalize('aa')}}</div>
+            <h2>缩写</h2>
+            <hr>
+            <p>v-bind:href 缩写 :href<br>v-on:click 缩写 @click</p>
+        </div>
+        <div id="classes2">
+            <h2>条件语句</h2>
+            <hr>
+            <div v-if="seen">if条件为true，显示</div>
+            <div v-else>if条件为false，不显示</div>
+            <template v-show="ok">template 显示</template>
+        </div>
+        <div id="classes3">
+            <h2>循环语句</h2>
+            <br>
+            迭代数组
+            <ol>
+                <li v-for="array in arrays">
+                    {{array}}
+                </li>
+            </ol>
+            迭代对象
+            <ol>
+                # obj in objects
+                <li v-for="obj in objects">
+                    {{obj}}
+                </li>
+                # (value, key) in objects
+                <li v-for="(value, key) in objects">
+                    {{key}}, {{value}}
+                </li>
+
+                # (value, key, index) in objects
+                <li v-for="(value, key, index) in objects">
+                    {{key}}, {{value}}, {{index}}
+                </li>
+            </ol>
+            迭代整数
+            <ol>
+                # n in 10
+                <li v-for="n in 10">
+                    {{n}}
+                </li>
+            </ol>
+        </div>
+        <div id="classes4">
+            <h2>计算属性</h2>
+            <hr>
+            属性关键字：computed
+            <div>原始字符串message：{{message}} </div>
+            <div>反转字符串reverseMessage：{{reverseMessage}} </div>
+            <p>
+                这里声明了一个计算属性 reversedMessage，提供的函数将用作属性 vm.reversedMessage 的 getter，
+                vm.reversedMessage 依赖于 vm.message，在 vm.message 发生改变时，vm.reversedMessage 也会更新
+            </p>
+            <h2>computed vs methods</h2>
+            <hr>
+            <div>computed与methods效果是一样的，但是 computed 是基于依赖缓存，只有相应依赖关系发生改变时才会重新获取值，
+                而使用 methods 在重新渲染时，函数总会重新调用执行。因此 computed 性能会更好些，因为它依赖缓存。</div>
+            <div>当computed使用一个独立于vue实例的变量时，“依赖缓存”的概念与method更加明显
+                <p>computed； 第一次outVar:{{callOutVar}}， 第二次outVar: {{callOutVar}} </p>
+                <p>method； 第一次outVar:{{callVar()}}, 第二次outVar:{{callVar()}}</p>
+            </div>
+            <h2>computed setter</h2>
+            <hr>
+            <div>computed 属性只有getter，但你可以自定义一个setter</div>
+            <div>{{name}} </div>
+        </div>
+        <div id="classes5">
+            <h2>监听属性</h2>
+            <hr>
+            通过 watch 属性或者调用实例方法 $watch 来响应数据的变化，回顾之前的vue提供的实例方法及实例属性，以$开头
+            <div>
+                <p style="font-size: 25px;">计数器:{{counter}} </p>
+                <p>计算器数值变化 {{oldVal}} 变为{{newVal}} </p>
+                <button @click="++counter">点击！</button>
+            </div>
+            <div>
+                千米：<input type="text" v-model="kilometers">=
+                米：<input type="text" v-model="meters">
+            </div>
+            <p>如果调用 $watch 的实例方法来监听属性，那它会在 watch 属性的后面执行</p>
+        </div>
+        <div id="classes6">
+            <h2>样式绑定</h2>
+            <hr>
+            <div>vue.js的v-bind 在处理 class 和 style 时，专门增强了它。表达式的结果类型除了字符串之外，还可以是对象或数组</div>
+            <h2>class属性绑定</h2>
+            <hr>
+            <div v-bind:class="{'active': isActive}">实例中isActive的true/false值决定该class是否显示</div>
+            <div v-bind:class="{'active': isActive, 'font-style': isActive}">传入多个属性{'active': isActive, 'font-style': isActive}</div>
+            <div v-bind:class="classObject">传入个对象classObject</div>
+            <div v-bind:class="[classObject, errorClass ? '':'active']">绑定个数组[classObject, errorClass ? '':'active']</div>
+            <h2>style(内联样式)</h2>
+            <hr>
+            <div v-bind:style="{color: activeColor}">直接设置{color: activeColor}</div>
+            <div v-bind:style="activeObject">直接绑定一个样式对象activeObject</div>
+            <div v-bind:style="[activeObject]">绑定个数组[activeObject]</div>
+            <div>注意：当 v-bind:style 使用需要特定前缀的 CSS 属性时，如 transform ，Vue.js 会自动侦测并添加相应的前缀。</div>
+        </div>
+        <div id="classes7">
+            <h2>事件处理器</h2>
+            <hr>
+            <div>事件监听可以使用v-on指令</div>
+            <button v-on:click="counter += 1">+1</button>
+            <div>按钮被点击了{{counter}}次 </div>
+            <h2>事件修饰符</h2>
+            <hr>
+            vue.js 为v-on提供了事件修饰符来处理DOM事件细节，如event.preventDefault()或event.stopPropagation()<br>
+            vue.js 通过由点(.)表示的指令后缀来调用修饰符
+            <ul>
+                <li>.stop</li>
+                <li>.prevent</li>
+                <li>.capture</li>
+                <li>.self</li>
+                <li>.once</li>
+            </ul>
+            <ul>
+                <li><a v-on:click.stop="handle">阻止单击事件冒泡 v-on:click.stop ，事件冒泡是从目标DOM到最外面DOM</a></li>
+                <li><form v-on:submit.prevent="handle">提交事件不再重载页面 v-on:submit.prevent</form></li>
+                <li><a v-on:click.stop.prevent="handle">修饰符可以串联 v-on:click.stop.prevent</a></li>
+                <li><form v-on:submit.prevent>只有修饰符 v-on:submit.prevent 没处理函数</form></li>
+                <li><div v-on:click.capture="handle">添加事件侦听器时使用事件捕获模式 v-on:click.capture，捕获模式是从最外面DOM到目标DOM</div></li>
+                <li><div v-on:click.self="handle">只当事件在该元素本身（而不是子元素）触发时触发回调 v-on:click.self </div></li>
+                <li><a v-on:click.once="handle">click 事件只能点击一次，2.1.4版本新增 v-on:click.once</a></li>
+            </ul>
+            <h2>按键修饰符</h2>
+            <hr>
+            <div>允许为v-on监听键盘事件时添加按键修饰符</div>
+            <input type="text" v-on:keyup.13="handle" value="只有在 keyCode 是 13 时调用 vm.handle()">
+            <div>
+                <input type="text" v-on:keyup.enter="handle" value="使用按键别名">
+                <div>全部按键别名</div>
+                <ul>
+                    <li>.enter</li>
+                    <li>.tab</li>
+                    <li>.delete(“删除”或“退格”键)</li>
+                    <li>.esc</li>
+                    <li>.space</li>
+                    <li>.up</li>
+                    <li>.down</li>
+                    <li>.left</li>
+                    <li>.right</li>
+                    <li>.ctrl</li>
+                    <li>.alt</li>
+                    <li>.shift</li>
+                    <li>.meta</li>
+                </ul>
+                <div>
+                    <input type="text" @keyup.alt.67="handle" value="依旧可以串联,如这里的alt+c">
+                </div>
+                <div>
+                    <input type="text" @click.ctrl="handle" value="这里的ctrl+click">
+                </div>
+            </div>
+        </div>
+        <div id="classes8">
+            <h2>表单</h2>
+            <hr>
+            <div>可以使用v-model指令在表单控件元素上创建双向数据绑定</div>
+            <div>
+                输入框
+                <hr>
+                <div>
+                    <input type="text" v-model="inputFrame" placeholder="使用v-model实现双向数据绑定">
+                    <p>{{inputFrame}} </p>
+                </div>
+
+                复选框
+                <hr>
+                <div>
+                    <p>单个复选框：</p>
+                    <input type="checkbox" id="checkbox" v-model="checked">
+                    <label for="checkbox">{{checked}} </label>
+                    <p>全选:</p>
+                    <input type="checkbox" id="all-checked" v-model="allChecked" @change="allCheckedMethod">
+                    <label for="all-checked">{{allChecked}} </label>
+                    <p>多个复选框：</p>
+                    <input type="checkbox" id="runoob" value="a" v-model="checkedNames">
+                    <label for="runoob">a</label>
+                    <input type="checkbox" id="runoob-b" value="b" v-model="checkedNames">
+                    <label for="runoob-b">b</label>
+                    <input type="checkbox" id="runoob-c" value="c" v-model="checkedNames">
+                    <label for="runoob-c">c</label>
+                    <p>选择的值为:{{checkedNames}} </p>
+                </div>
+
+                单选按钮
+                <hr>
+                <div>
+                    <input id="radio-a" type="radio" value="a" v-model="picked">
+                    <label for="radio-a">a</label>
+                    <input id="radio-b" type="radio" value="b" v-model="picked">
+                    <label for="radio-b">b</label>
+                    <p>选中的值为:{{picked}} </p>
+                </div>
+
+                select列表
+                <hr>
+                <div>
+                    <select v-model="selected" name="fruit">
+                        <option value="">选择一个网站</option>
+                        <option value="Runoob">Runoob</option>
+                        <option value="Google">Google</option>
+                    </select>
+                    <div>选择的网站是:{{selected}} </div>
+                </div>
+            </div>
+            <h2>修饰符</h2>
+            <hr>
+            <ul>
+                <li>
+                    <div>.lazy</div>
+                    <input type="text" v-model.lazy="inputLazy">
+                    <p>默认情况下，input事件同步输入框的值与数据，加了它转变为change事件。{{inputLazy}} </p>
+                </li>
+                <li>
+                    <div>.number</div>
+                    <input type="number" v-model.number="inputNumber">
+                    <p>将用户输入转为Number类型(如果原值结果为NaN则返回原值)。 {{inputNumber}} </p>
+                </li>
+                <li>
+                    <div>.trim</div>
+                    <input type="text" v-model.trim="inputTrim">
+                    <p>它可以自动去除首尾空格。 <span style="background-color: #ccc;">{{inputTrim}}</span></p>
+                </li>
+            </ul>
+        </div>
+        <div id="classes9">
+            <h2>组件</h2>
+            <hr>
+            <div>
+                组件可以扩展HTML元素，封装可重用的代码
+                <div>
+                    <p>注册全局组件语法：Vue.component(tagName, options)，其中tagName为组件名，options为配置选项</p>
+                    <p>注册后使用&lt;tagName&gt;&lt;/tagName&gt;的方式来调用组件</p>
+                </div>
+            </div>
+            全局组件
+            <hr>
+            <div>所有实例都能使用到它</div>
+            <cman-global></cman-global>
+            <br>
+            局部组件(只能在实例内使用)
+            <hr>
+            <cman-local></cman-local>
+            <h2>Prop</h2>
+            <hr>
+            <div>
+                <p>prop是子组件用来接收父组件传递过来的数据的一个自定义属性</p>
+                <p>父组件的数据需要通过props把数据传给子组件，子组件需要显式的用props选项声明“prop"</p>
+            </div>
+            <cman-local message="父组件传递数据给子组件"></cman-local>
+            <h2>动态Prop</h2>
+            <hr>
+            <div>类型用v-bind绑定html特性到一个表达式，也可以用v-bind动态绑定props的值到父组件的数据中，每当父组件的数据变化时，该变化也会传导给子组件</div>
+            <label>改变父组件的值</label><input type="text" v-model="message">
+            <cman-local-prop v-bind:message="message"></cman-local-prop>
+            <div style="font-weight: bold;">注意：prop是单向绑定的，即当父组件的属性变化时，将传导给子组件，但是不会反过来</div>
+            <h2>Prop验证</h2>
+            <hr>
+            <div>
+                <p>组件可以为props指定验证要求</p>
+                <p>为了定制 prop 的验证方式，你可以为 props 中的值提供一个带有验证需求的对象，而不是一个字符串数组。</p>
+            </div>
+            <h2>自定义事件</h2>
+            <hr>
+            <div>
+                <p>父组件使用 props 传递数据给子组件，但如果子组件要把数据传递回去，就需要使用自定义事件</p>
+                <p>
+                    我们可以使用 v-on 绑定自定义事件，每个vue实例都实现了事件接口(event interface)，即
+                    <ul>
+                        <li>使用 $on(eventName) 监听事件</li>
+                        <li>使用 $emit(eventName) 触发事件</li>
+                    </ul>
+                    <div>另外，父组件可以在使用子组件的地方直接用 v-on 来监听子组件触发的事件。</div>
+                </p>
+            </div>
+            <p>{{total}} </p>
+            <button-counter v-on:increment="incrementTotal"></button-counter>
+            <button-counter v-on:increment="incrementTotal"></button-counter>
+			<div>监听原生事件可以使用 .native 修饰 v-on</div>
+			<hr>
+			<button-counter v-on:click.native="nativeMethod"></button-counter>
+			<div>子组件的data是一个函数而不是一个对象，这样做可以避免影响不同的实例</div>
+        </div>
+        <div id="classes10">
+			<h2>自定义指令</h2>
+			<hr>
+			<div>除了默认设置的核心指令(v-model、v-bind)。Vue也允许注册自定义指令</div>
+			<div>全局指令</div>
+			<hr>
+			<input v-focus>
+			<p>页面载入时，上面的 input 元素自动获得焦点并失去</p>
+			<div>局部指令</div>
+			<hr>
+			<input v-focus>
+			<p>页面载入时，上面的 input 元素自动获得焦点</p>
+			<h2>钩子函数</h2>
+			<hr>
+			<div>指令定义函数提供了几个钩子函数(可选)</div>
+			<ul>
+				<li>bind：只调用一次，指令第一次绑定到元素时调用，用这个钩子函数可以定义一个在绑定时执行一次的初始化动作</li>
+				<li>inserted：被绑定元素插入父节点时调用（父节点存在即可调用，不必存在于 document 中）</li>
+				<li>update：被绑定元素所在的模板更新时调用，而不论绑定值是否变化。通过比较更新前后的绑定值，可以忽略不必要的模板更新</li>
+				<li>componentUpdated：被绑定元素所在模板完成一次更新周期时调用</li>
+				<li>unbind：只调用一次</li>
+			</ul>
+			<h2>钩子函数参数</h2>
+			<hr>
+			<ul>
+				<li>el：指令说绑定的元素，可以用来直接操作DOM</li>
+				<li>binding:一个对象
+					<ul>
+						<li>name：指令名，不包括 v- 前缀</li>
+						<li>value：指令的绑定值，	例如 v-my="1+1"，value的值为2.v-my="name" name为实例的定义数据且为cman，则value为cman，实例中数据没定义则为undefined</li>
+						<li>oldValue：指令绑定的前一个值，尽在update、componentUpdated钩子中可用，无论值是否改变都可用</li>
+						<li>expression：绑定值的表达式或变量名，例如 v-my="1+1"，expression的值是1+1</li>
+						<li>arg：传给指令的参数，例如 v-my:name，arg的值是name</li>
+						<li>modifiers：一个包含修饰符的对象，例如 v-my.name.bar，修饰符对象的值是{name: true, bar:  true}</li>
+					</ul>
+				</li>
+				<li>vnode：	Vue编译生成的虚拟节点</li>
+				<li>oldVnode：上一个虚拟节点，尽在update、componentUpdated钩子中可用</li>
+			</ul>
+			<div>&lt;div v-cman:boy.name.age="1+2"&gt;&lt;/div&gt;</div>
+			<div v-cman:boy.name.age="1+2"></div><br>
+			<div>指令函数可接受所有合法的JavaScript表达式</div>
+			<hr>
+			<div>&lt;div v-runoob="{ color: 'green', text: '菜鸟教程!' }"&gt;</div>
+			<div v-runoob="{ color: 'green', text: '菜鸟教程!' }"></div>
+			<div>这里没有使用到钩子函数，可以简写函数，即把钩子参数去掉，直接写方法</div>
+		</div>
+        <div id="classes11">
+			<h2>路由</h2>
+			<hr>
+			<div>Vue.js 路由允许我们通过不同的URL访问不同的内容，通过Vue.js可以实现多视图的单页Web应用(SPA:single page web application)</div>
+            <h2>Vue.js + vue-router实现简单的单页面应用</h2>
+            <hr>
+            <div>
+                <div>通过&lt;router-link&gt;组件进行导航，通过to属性指定链接</div>   
+                <router-link to="/foo">go to foo router</router-link>
+                <router-link to="/bar">go to bar router</router-link>
+            </div>
+            <p>路由出口，路由匹配到的组件将渲染在下面这个元素</p>
+            <router-view></router-view>
+            <h2>router-link相关属性</h2>
+            <hr>
+            <ul>
+                <li>
+                    <label>to</label>
+                    <div>表示目标路由的链接，当被点击后，内部会立刻把to的值传给router push(),所以这个值可以是一个字符串或者是描述目标位置的对象</div>
+                    <p>字符串</p>
+                    <router-link to="home">&lt;router-link to="home"&gt;Home&lt;/router-link&gt;</router-link>
+                    <p>也可以使用v-bind的JS表达式或者v-bind的简写， :属性</p>
+                    <router-link v-bind:to="'home'">&lt;router-link v-bind:to="'home'"&gt;Home&lt;/router-link&gt;</router-link>
+                    <p>绑定一个对象</p>
+                    <router-link :to="{path: 'home'}">&lt;router-link :to="{path: 'home'}"&gt;Home&lt;/router-link&gt;</router-link>
+                    <p>命名的路由</p>
+                    <router-link :to="{name: 'user', params: {userId: 123}}">&lt;router-link :to="{name: 'user', params: {userId: 123}}"&gt;&lt;/router-link&gt;</router-link>
+                    <p>带查询参数</p>
+                    <router-link :to="{path: '/register', query: {plan: 'private'}}">&lt;router-link :to="{path: '/register', query: {plan: 'private'}}"&gt;&lt;/router-link&gt;</router-link>
+                </li>
+                <li>
+                    <label>replace</label>
+                    <div>设置 replace 属性的话，当点击时，会调用 router.replace() 而不是 router.push()，导航后不会留下 history 记录。</div>
+                    <router-link :to="{ path: '/abc'}" replace>&lt;router-link :to="{ path: '/abc'}" replace&gt;&lt;/router-link&gt;</router-link>
+                </li>
+                <li>
+                    <label>append</label>
+                    <div>设置 append 属性后，则在当前 (相对) 路径前添加其路径。例如，我们从 /a 导航到一个相对路径 b，如果没有配置 append，则路径为 /b，如果配了，则为 /a/b</div>
+                    <router-link :to="{path: 'relative/path'}" append>&lt;router-link :to="{path: 'relative/path'}" append&gt;&lt;/router-link&gt;</router-link>
+                </li>
+                <li>
+                    <label>tag</label>
+                    <div>有时候想要 &lt;router-link&gt; 渲染成某种标签，例如 &lt;p&gt;。 于是我们使用 tag prop 类指定何种标签，同样它还是会监听点击，触发导航。</div>
+                    <router-link :to="{path: '/abc'}" tag="p">&lt;router-link :to="{path: '/abc'}" tag="p"&gt;&lt;/router-link&gt;</router-link>
+                </li>
+                <li>
+                    <label>exact-active-class</label>
+                    <div>配置当链接被精确匹配的时候应该激活的 class。可以通过以下代码来替代。</div>
+                    <router-link :to="{path: '/abc'}" exact-active-class="_active">&lt;router-link :to="{path: '/abc'}" exact-active-class="_active"&gt;&lt;/router-link&gt;</router-link>
+                    <router-link :to="{path: '/abc'}" tag="p">&lt;router-link :to="{path: '/abc'}" tag="p"&gt;&lt;/router-link&gt;</router-link>
+                    <div>
+                        <h3>exact-active-class 和 active-class 的区别(全匹配与模糊)</h3>
+                        <div>router-link 默认情况下的路由是模糊匹配，例如当前路径是 /article/1 那么也会激活 &lt;router-link to="/article"&gt;，所以当设置 exact-active-class 以后，这个 router-link 只有在当前路由被全包含匹配时才会被激活 exact-active-class 中的 class，</div>
+                    </div>
+                </li>
+                <li>
+                    <label>event</label>
+                    <div>声明可以用来触发导航的事件。可以是一个字符串或是一个包含字符串的数组。</div>
+                    <router-link :to="{path: 'abc'}" event="mouseover" append>&lt;router-link :to="{path: 'abc'}" event="mouseover" append&gt;&lt;/router-link&gt;</router-link>
+                    <p>当鼠标移动到上面时，自动触发&lt;router-link&gt;标签，看导航栏变化</p>
+                </li>
+            </ul>
+		</div>
+        <div id="classes12">
+        	<h2>过渡</h2>
+        	<hr />
+        	<a target="_blank" href="https://cn.vuejs.org/v2/guide/transitions.html">官网例子</a>
+        	<div>注意，这要依赖CSS进行</div>
+        </div>
+        <div id="classes13">
+        	<h2>混入</h2>
+        	<hr />
+        	<div>混入(mixins)定义了一部分可复用的方法或者计算属性。混入对象可以包含任意组件选项。当组件使用混入对象时，所有混入对象的选项将被混入该组件本身的选项。</div>
+        	<h2>选项合并</h2>
+        	<hr />
+        	<div>当组件和混入的对象含有同名选项时，这些选项以恰当的方式混合。</div>
+        	<div>比如，数据对象在内部会进行浅合并 (一层属性深度)，在和组件的数据发生冲突时以组件数据优先。</div>
+        	<div>如果methods有同名函数，那Vue实例的优先级会更高一些。比如下面这个混入对象的methods与Vue实例中的methods存在同名方法</div>
+        	<h2>全局混入</h2>
+        	<hr />
+        	<div>也可以全局注册混入对象。注意使用！ 一旦使用全局混入对象，将会影响到 所有 之后创建的 Vue 实例。使用恰当时，可以为自定义对象注入处理逻辑	</div>
+        </div>
+        <div id="classes14">
+        	<h2>Vue.js 2.0版本推荐使用Axios来完成ajax请求，Axios是一个基于Promise的HTTP库，可以用在浏览器和node.js中</h2>
+        	<hr />
+        	<h2>GET请求</h2>
+        	<hr />
+        	<div>
+        		<p>{{weatherG.city}} {{weatherG.weather}} {{weatherG.wind}} {{weatherG.temp}}</p>
+        	</div>
+        	<h2>POST请求</h2>
+        	<hr />
+        	<div>
+        		<p>{{weatherP.city}} {{weatherP.weather}} {{weatherP.wind}} {{weatherP.temp}}</p>
+        	</div>
+        	<h2>执行多个并发请求</h2>
+        	<hr />
+        	<div>
+        		<label>GET</label>
+        		<p>{{weatherAllG.city}} {{weatherAllG.weather}} {{weatherAllG.wind}} {{weatherAllG.temp}}</p>
+        		<label>POST</label>
+        		<p>{{weatherAllP.city}} {{weatherAllP.weather}} {{weatherAllP.wind}} {{weatherAllP.temp}}</p>
+        	</div>
+        	<h2>请求方法的别名</h2>
+        	<hr />
+        	<div>
+        		为方便使用，官方为所有支持的请求方法提供了别名，可以直接使用别名来发起请求：<br />
+				axios.request(config)<br />
+				axios.get(url[, config])<br />
+				axios.delete(url[, config])<br />
+				axios.head(url[, config])<br />
+				axios.post(url[, data[, config]])<br />
+				axios.put(url[, data[, config]])<br />
+				axios.patch(url[, data[, config]])<br />
+				注意：在使用别名方法时， url、method、data 这些属性都不必在配置中指定。
+        	</div>
+        	<h2>响应结构</h2>
+        	<hr />
+        	<div>
+        		{<br />
+				  &nbsp;&nbsp;// `data` 由服务器提供的响应<br />
+				  &nbsp;&nbsp;data: {},<br />
+				  &nbsp;&nbsp;// `status`  HTTP 状态码<br />
+				  &nbsp;&nbsp;status: 200,<br />
+				  &nbsp;&nbsp;// `statusText` 来自服务器响应的 HTTP 状态信息<br />
+				  &nbsp;&nbsp;statusText: "OK",<br />
+				  &nbsp;&nbsp; // `headers` 服务器响应的头<br />
+				  &nbsp;&nbsp; headers: {},<br />
+				  &nbsp;&nbsp;// `config` 是为请求提供的配置信息<br />
+				  &nbsp;&nbsp;config: {}<br />
+				}
+        	</div>
+        	<h2>拦截器</h2>
+        	<hr />
+        	<div>在请求或响应被 then 或 catch 处理前拦截它们。</div>
+        	<div>
+        		// 添加请求拦截器<br />
+				axios.interceptors.request.use(function (config) {<br />
+				    // 在发送请求之前做些什么<br />
+				    return config;<br />
+				  }, function (error) {<br />
+				    // 对请求错误做些什么<br />
+				    return Promise.reject(error);<br />
+				  });<br />
+				<br />
+				// 添加响应拦截器<br />
+				axios.interceptors.response.use(function (response) {<br />
+				    // 对响应数据做点什么<br />
+				    return response;<br />
+				  }, function (error) {<br />
+				    // 对响应错误做点什么<br />
+				    return Promise.reject(error);<br />
+				  });
+        	</div>
+        	<div><br />
+        		如果你想在稍后移除拦截器，可以这样：
+				<br />
+				var myInterceptor = axios.interceptors.request.use(function () {/*...*/});<br />
+				axios.interceptors.request.eject(myInterceptor);<br />
+				<br />可以为自定义 axios 实例添加拦截器。
+				<br />
+				var instance = axios.create();<br />
+				instance.interceptors.request.use(function () {/*...*/});
+        	</div>
+        </div>
+        <div id="classes15">
+            <h2>Vue 要实现异步加载需要使用到 vue-resource 库</h2>
+            <hr>
+            <h2>GET请求</h2>
+            <hr>
+            <div>
+                <button @click="getMethod">发送GET请求</button>
+                <div>{{get}}</div>
+            </div>
+            <h2>POST请求</h2>
+            <hr>
+            <div>
+                <button @click="postMethod">发送POST请求</button>
+                <div>{{post}}</div>
+            </div>
+            <h2>语法 & API</h2>
+            <hr>
+            <div>你可以使用全局对象方式 Vue.http 或者在一个 Vue 实例的内部使用 this.$http来发起 HTTP 请求。</div>
+            <ul>
+                <li>[Vue.http | this.$http].get('/someUrl', [options]).then(successCallback, errorCallback);</li>
+                <li>[Vue.http | this.$http].post('/someUrl', [body], [options]).then(successCallback, errorCallback);</li>
+            </ul>
+            <div>vue-resource提供七种请求API(REST 风格)</div>
+            <ol>
+                <li>get(url, [options])</li>
+                <li>head(url, [options])</li>
+                <li>delete(url, [options])</li>
+                <li>jsonp(url, [options])</li>
+                <li>post(url, [body], [options])</li>
+                <li>put(url, [body], [options])</li>
+                <li>patch(url, [body], [options])</li>
+            </ol>
+            <h2>JSONP请求</h2>
+            <hr>
+            <div>
+                <button @click="jsonpMethod">百度JSONP请求</button>
+                <div>{{jsonp}}</div>
+            </div>
+            <hr>
+            <div>jsonp默认是callback,百度缩写成了cb</div>
+        </div>
+        <div id="classes16">
+        	<h2>响应接口</h2>
+        	<hr />
+        	<div>Vue可以添加数据动态响应接口，如我们通过使用 $watch 属性来实现数据的监听，$watch 必须添加在 Vue 实例之外才能实现正确的响应</div>
+        	<div>
+    			<button @click = "counter++" style = "font-size:25px;">计数器: {{ counter }}</button>
+        	</div>
+        	<div>
+        		<p>Vue不允许在已经创建的实例上动态添加新的根级响应式属性</p>
+        		<p>Vue不能检测到根级响应式属性的添加或者删除，最好的方式就是在初始化实例的时候声明根级响应式属性，哪怕只是一个空值</p>
+        		<p>如果我们需要在运行时实现属性的添加或者删除，可以使用全局Vue、Vue.set、Vue.delete方法</p>
+        	</div>
+        	<h2>Vue.set</h2>
+        	<hr />
+        	<div>用于置对象的属性，它可以解决 Vue 无法检测添加属性的限制 </div>
+        	<ul>
+        		Vue.set( target, key, value )
+        		<li>target: 可以是对象或数组</li>
+        		<li>key : 可以是字符串或数字</li>
+        		<li>value: 可以是任何类型</li>
+        	</ul>
+        	<div>
+    			<button @click = "products.id++" style = "font-size:25px;">计数器2: {{ products.id }}</button>
+        	</div>
+        	<div>新增一个属性但不是在实例中新增，那打开控制台(products对象中的qty属性)可以看到该属性没有setter/getter方法，即不是响应式的，那这时候可以通过Vue.set方法</div>
+        	<h2>Vue.delete</h2>
+        	<hr />
+        	<div>删除动态添加的属性</div>
+        	<ul>
+        		语法格式:Vue.delete(target, key)
+        		<li>target: 可以是对象或数组</li>
+        		<li>key : 可以是字符串或数字</li>
+        	</ul>
+        	<button @click="removeAge">移除实例中的age属性，控制台看结果</button>
+        </div>
+    </content>
+
+    <!-- 初始化脚本 -->
+    <script type="text/javascript">
+        // 模拟栈容器，记录显示的课程内容
+        let contentLIFO = [];
+        // 标题内容映射对象
+        const navContentORM = {
+            'nav-classes1': {
+                value: 'classes1',
+                name: '模板语法'
+            },
+            'nav-classes2': {
+                value: 'classes2',
+                name: '条件语句'
+            },
+            'nav-classes3': {
+                value: 'classes3',
+                name: '循环语句'
+            },
+            'nav-classes4': {
+                value: 'classes4',
+                name: '计算属性'
+            },
+            'nav-classes5': {
+                value: 'classes5',
+                name: '监听属性'
+            },
+            'nav-classes6': {
+                value: 'classes6',
+                name: '样式绑定'
+            },
+            'nav-classes7': {
+                value: 'classes7',
+                name: '事件处理器'
+            },
+            'nav-classes8': {
+                value: 'classes8',
+                name: '表单'
+            },
+            'nav-classes9': {
+                value: 'classes9',
+                name: '组件'
+            },
+            'nav-classes10': {
+                value: 'classes10',
+                name: '自定义指令'
+            },
+            'nav-classes11': {
+                value: 'classes11',
+                name: '路由'
+            },
+            'nav-classes12': {
+                value: 'classes12',
+                name: '过渡&动画'
+            },
+            'nav-classes13': {
+                value: 'classes13',
+                name: '混入'
+            },
+            'nav-classes14': {
+                value: 'classes14',
+                name: 'Ajax(axios)'
+            },
+            'nav-classes15': {
+                value: 'classes15',
+                name: 'Ajax(vue-resource)'
+            },
+            'nav-classes16': {
+                value: 'classes16',
+                name: '响应接口'
+            },
+            'nav-classes17': {
+                value: 'classes17',
+                name: '实例'
+            }
+        };
+
+        // 点击事件处理
+        let navs = document.getElementsByTagName('nav')[0];
+        let navDiv = navs.getElementsByTagName('div');
+        for (let nav of navDiv) {
+            nav.onclick = function(event) {
+                let showContentId = navContentORM[nav.getAttribute('id')].value;
+                let beforeShowContentId = contentLIFO.shift();
+                contentLIFO.push(showContentId);
+
+                beforeShowContentId && (document.getElementById(beforeShowContentId)
+                    .style.setProperty('display', 'none'));
+                document.getElementById(showContentId).style.setProperty('display', 'block');
+                contentMethod[showContentId]();
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        thisContent = 14;
+        const contentMethod = {
+            classes1: function() {
+                let vm = new Vue({
+                    // 挂载点
+                    el: '#classes1',
+                    // 定义属性
+                    data: {
+                        site: 'vue学习',
+                        url: 'http://www.baidu.com',
+                        alexa: '10000',
+                        message: '<p>vue模板语法</p>',
+                        use: false,
+                        ok: true,
+                        id: 1,
+                        userInput: 'v-model指令用在表单控件元素上，根据表单的值自动更新绑定的元素的值',
+                    },
+                    // 定义函数
+                    methods: {
+                        details: function() {
+                            return this.alexa;
+                        },
+                        eventClick: function() {
+                            alert('点击了');
+                        },
+                        onSubmit: function() {
+                            console.log(1);
+                        },
+                        clickHandle: function() {
+                            console.log(2);
+                        }
+                    },
+                    filters: {
+                        capitalize: function(val1, val2) {
+                            return val1 + val2;
+                        }
+                    }
+                });
+
+                setTimeout(function() {
+                    vm.site = 'vue更新值'
+                }, 1000);
+                // vue实例提供的属性与方法，以 $ 前缀为标识
+                // console.log(vm.$el);
+            },
+            classes2: function() {
+                let vm = new Vue({
+                    el: '#classes2',
+                    data: {
+                        seen: true,
+                        ok: true
+                    }
+                });
+            },
+            classes3: function() {
+                let vm = new Vue({
+                    el: '#classes3',
+                    data: {
+                        arrays: ['v-for指令', ' 需要以item in list形式的语法', 'item 是数组元素的迭代别名', 'list是源数组'],
+                        objects: {
+                            val: '支持obj in objs 或者 (value, key) in  objs的语法',
+                            val1: '不仅可以迭代数组',
+                            val2: '还可以迭代对象'
+                        }
+                    }
+                });
+            },
+            classes4: function() {
+                let outVar = 1;
+                let vm = new Vue({
+                    el: '#classes4',
+                    data: {
+                        message: '它在处理一些复杂逻辑时很有用',
+                        name: '给 computed 属性自定义setter时要带上getter，3秒后触发setter',
+                    },
+                    methods: {
+                        callVar: function() {
+                            return ++outVar;
+                        }
+                    },
+                    computed: {
+                        reverseMessage: function() {
+                            return this.message.split('').reverse().join('');
+                        },
+                        callOutVar: function() {
+                            return ++outVar;
+                        },
+                        site: {
+                            set: function(val) {
+                                this.name = val;
+                            },
+                            get: function() {
+                                return this.name;
+                            }
+                        }
+                    }
+                });
+                setTimeout(function() {
+                    vm.site = '这里我给 computed 属性自定义了一个settter，并且修改computed属性中reverseMessage的依赖属性message';
+                    vm.message = '修改依赖属性message';
+                }, 3000);
+            },
+            classes5: function() {
+                let vm = new Vue({
+                    el: '#classes5',
+                    data: {
+                        counter: 1,
+                        newVal: 0,
+                        oldVal: 0,
+                        kilometers: 0,
+                        meters: 0
+                    },
+                    watch: {
+                        kilometers: function(val) {
+                            this.kilometers = val;
+                            this.meters = this.kilometers * 1000;
+                        },
+                        meters: function(val) {
+                            this.meters = val;
+                            this.kilometers = this.meters / 1000;
+                        }
+                    }
+                });
+                vm.$watch('counter', function(nval, oval) {
+                    this.newVal = nval;
+                    this.oldVal = oval;
+                });
+            },
+            classes6: function() {
+                let vm = new Vue({
+                    el: '#classes6',
+                    data: {
+                        activeColor: 'green',
+                        activeFontSize: '18',
+                        activeObject: {
+                            color: 'green',
+                            'font-size': '18px'
+                        },
+                        isActive: true,
+                        errorClass: false,
+                        classObject: {
+                            'font-style': true
+                        }
+                    }
+                });
+            },
+            classes7: function() {
+                let vm = new Vue({
+                    el: '#classes7',
+                    data: {
+                        counter: 0
+                    },
+                    methods: {
+                        handle: function() {
+                            alert('event...')
+                        }
+                    }
+                });
+            },
+            classes8: function() {
+                let vm = new Vue({
+                    el: '#classes8',
+                    data: {
+                        checkedNameList: ['a', 'b', 'c'],
+                        inputFrame: '',
+                        checked: false,
+                        allChecked: false,
+                        checkedNames: [],
+                        picked: 'a',
+                        selected: '',
+                        inputLazy: '',
+                        inputNumber: '0',
+                        inputTrim: ''
+                    },
+                    methods: {
+                        allCheckedMethod: function() {
+                            if (this.allChecked) {
+                                let array = [];
+                                for (let item of this.checkedNameList) {
+                                    array.push(item);
+                                }
+                                this.checkedNames = array;
+                            } else {
+                                this.checkedNames.length = 0;
+                            }
+                        }
+                    },
+                    watch: {
+                        checkedNames: function(nval, oval) {
+                            if (this.checkedNames.length === this.checkedNameList.length) {
+                                this.allChecked = true;
+                            } else {
+                                this.allChecked = false;
+                            }
+                        }
+                    }
+                });
+            },
+            classes9: function() {
+                Vue.component('cman-global', {
+                    template: '<div>全局组件-自定义组件，我声明了cman-global组件！</div>'
+                });
+                let child = {
+                    template: '<div>局部组件-自定义组件，我声明了cman-local组件！,我要获取父组件传递的数据message:{{message}} </div>',
+                    props: ['message']
+                };
+                let child2 = {
+                    template: '<div>局部组件-动态Prop，传递的值message:{{message}} </div>',
+                    // props: ['message']
+                    props: {
+                        message: String,
+                       /* // 基础的类型检查 (`null` 和 `undefined` 会通过任何类型验证)
+                        propA: Number,
+                        // 多个可能的类型
+                        propB: [String, Number],
+                        // 必填的字符串
+                        propC: {
+                          type: String,
+                          required: true
+                        },
+                        // 带有默认值的数字
+                        propD: {
+                          type: Number,
+                          default: 100
+                        },
+                        // 带有默认值的对象
+                        propE: {
+                          type: Object,
+                          // 对象或数组默认值必须从一个工厂函数获取
+                          default: function () {
+                            return { message: 'hello' }
+                          }
+                        },
+                        // 自定义验证函数
+                        propF: {
+                          validator: function (value) {
+                            // 这个值必须匹配下列字符串中的一个
+                            return ['success', 'warning', 'danger'].indexOf(value) !== -1
+                          }
+                        }
+                        type可以是原生构造器：String、Number、Boolean、Array、Object、Date、Function、Symbol，
+                        也可以是自定义构造器，使用instanceof检测
+                        */
+                    }
+                };
+				let child3 = {
+					template: '<button v-on:click="incrementHandler">{{counter}} </button>',
+					data: function() {
+						return {
+							counter: 0
+						};
+					},
+					methods: {
+						incrementHandler: function() {
+							++this.counter;
+							this.$emit('increment');
+						}
+					}
+				};
+                let vm = new Vue({
+                    el: '#classes9',
+                    data: {
+                        message: '父组件的值',
+						total: 0
+                    },
+                    components: {
+                        'cman-local': child,
+                        'cman-local-prop': child2,
+						'button-counter': child3
+                    },
+					methods: {
+						incrementTotal: function() {
+							++this.total;
+						},
+						nativeMethod: function() {
+							console.log(arguments);
+						}
+					}
+                });
+            },
+            classes10: function() {
+				Vue.directive('focus', {
+					inserted: function(el) {
+						el.focus();
+					}
+				});
+                let vm = new Vue({
+                    el: '#classes10',
+					directives: {
+						// 注册一个 v-focus 的局部指令
+						focus: {
+							inserted: function(el) {
+								el.focus();
+							}
+						},
+						cman: {
+							bind: function(el, binding, vnode) {
+								var s = JSON.stringify
+								el.innerHTML =
+								  'name: '       + s(binding.name) + '<br>' +
+								  'value: '      + s(binding.value) + '<br>' +
+								  'expression: ' + s(binding.expression) + '<br>' +
+								  'argument: '   + s(binding.arg) + '<br>' +
+								  'modifiers: '  + s(binding.modifiers) + '<br>' +
+								  'vnode keys: ' + Object.keys(vnode).join(', ')
+							}
+						},
+						runoob: function(el, binding) {
+							// 简写方式设置文本及背景颜色
+							el.innerHTML = binding.value.text
+							el.style.backgroundColor = binding.value.color
+						}
+					}
+                });
+            },
+            classes11: function() {
+                // 1.如果使用模块化开发，导入Vue和VueRouter要调用Vue.use(VueRouter)
+                // 2.定义组件
+                const foo = {
+                    template: '<div>This is foot router</div>'
+                };
+                const bar = {
+                    template: '<div>This is bar router</div>'
+                };
+                // 3.定义路由，每个路由映射一个组件，其中“component"可以是通过Vue.extend()创建的组件构造器或者只是一个组件配置对象
+                const routes  = [{
+                    path: '/foo',
+                    component: foo
+                }, {
+                    path: '/bar',
+                    component: bar
+                }];
+                // 4.创建router实例，然后传routes配置
+                const router = new VueRouter({
+                    routes: routes
+                });
+                // 5.创建和挂载根实例，通过router配置参数注入路由，从而让整个应用用都有路由功能
+                let vm = new Vue({
+                    router					
+                }).$mount('#classes11');
+            },
+            classes12: function() {
+                let vm = new Vue({
+                    el: '#classes12',
+                    data: {
+                    	show: false,
+                    	styleobj: {
+                    		fontSize: '18px',
+                    		color: 'red'
+                    	}
+                    }
+                });
+            },
+            classes13: function() {
+                Vue.mixin({
+                	created: function() {
+                		let myOptions = this.$options.myOption;
+                		if (myOptions) {
+                			alert('全局混入对象,' + myOptions);
+                		}
+                	}
+                });
+            	let myMixin = {
+            		created: function() {
+        				this.startmixin();
+            		},
+            		methods: {
+            			startmixin: function () {
+				            document.write("欢迎来到混入实例<br>");
+				            document.write("<<<<<混入调用<br>");
+				        },
+				        sameMethod: function() {
+            				document.write('混入对象，与实例对象的methods存在相同方法名<br>');
+				        }
+            		}
+            	};
+                let vm = new Vue({
+                    el: '#classes13',
+                    mixins: [myMixin],
+                    methods: {
+                    	sameMethod: function() {
+            				document.write('实例对象，与混入对象methods存在相同方法名<br>');
+				        }
+                    },
+                    created: function() {
+			            document.write("<<<<<组件调用<br>");
+                    },
+                    myOption: true
+                });
+                vm.sameMethod();
+                vm.startmixin();
+                
+            },
+            classes14: function() {
+            	let vm = new Vue({
+                    el: '#classes14',
+                    data: {
+                    	weatherG: {},
+                    	weatherP: {},
+                    	weatherAllG: {},
+                    	weatherAllP: {}
+                    },
+                    mounted: function() {
+                    	axios.get('https://api.help.bj.cn/apis/weather2d/', {
+                    		params: {
+                    			id: '广州'
+                    		}
+                    	})
+                    	.then(response => {
+                    		this.weatherG = response.data;
+                    	})
+                    	.catch(error => {
+                    		console.log('get error:', error);
+                    	});
+                    	
+                    	axios.post('https://api.help.bj.cn/apis/weather2d/', {
+                    		id: '广州'
+                    	})
+                    	.then(response => {
+                    		this.weatherP = response.data;
+                    	})
+                    	.catch(error => {
+                    		console.log('post error:', error)
+                    	});
+                    }
+                });
+                
+            	function getUserAccount() {
+				  	return axios.get('https://api.help.bj.cn/apis/weather2d/', {
+				  		params: {
+				  			id: '阳江'
+				  		}
+				  	});
+				}
+				function getUserPermissions() {
+				  	return axios.post('https://api.help.bj.cn/apis/weather2d/', {
+				  		id: '北京'
+				  	});
+				}
+				axios.all([getUserAccount(), getUserPermissions()])
+				  	.then(axios.spread(function (act, perms) {
+					    vm.weatherAllP = act.data;
+					    vm.weatherAllG = perms.data;
+			  	}));
+            },
+            classes15: function() {
+                let vm = new Vue({
+                    el: '#classes15',
+                    data: {
+                        get: '',
+                        post: '',
+                        jsonp: ''
+                    },
+                    methods: {
+                        getMethod() {
+                            this.$http.get('https://api.help.bj.cn/apis/weather2d/', {
+                                params: {
+                                    id: '广州'
+                                }
+                            }).then(res => {
+                                this.get = res.body;
+                            });
+                        },
+                        postMethod() {
+                            this.$http.post('https://api.help.bj.cn/apis/weather2d/', {
+                                id: '阳江'
+                            }, {
+                                emulateJSON: true
+                            }).then(res => {
+                                this.post = res.body;
+                            });
+                        },
+                        jsonpMethod() {
+                            this.$http.jsonp('https://www.baidu.com/sugrec?pre=1&p=3&ie=utf-8&json=1&prod=pc&from=pc_web', {
+                                params: {
+                                    wd: '广州市'
+                                },
+                                jsonp: 'cb'
+                            }).then(res => {
+                                this.jsonp = res.body;
+                            });
+                        }
+                    }
+                });
+            },
+            classes16: function() {
+            	let myproduct = {
+            		id: 1,
+            		name: 'cman',
+            		age: 23
+            	};
+                let vm = new Vue({
+                    el: '#classes16',
+                    data: {
+                    	counter: 0,
+                    	products: myproduct
+                    },
+                    methods: {
+                    	removeAge: function() {
+                    		Vue.delete(this.products, 'age');
+                    		console.log(this);
+                    	}
+                    }
+                });
+                vm.$watch('counter', function(nVal, oVal) {
+                	alert('计数值的变化,oVal:[' + oVal + '],nVal:[' + nVal + ']');
+                });
+                console.log(vm);
+                vm.$watch('products.id', function(nVal, oVal) {
+                	alert('计数值2的变化,oVal:[' + oVal + '],nVal:[' + nVal + ']');
+                });
+                Vue.set(myproduct, 'qty', 1);
+            }
+        };
+
+        // 调试
+        (function() {
+            let nav = document.getElementsByTagName('nav')[0];
+            nav.getElementsByTagName('div')[thisContent].click();
+        })();
+    </script>
+</body>
+</html>
